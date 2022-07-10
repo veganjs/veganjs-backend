@@ -1,6 +1,6 @@
 import {
-  ConflictException,
   Injectable,
+  ConflictException,
   NotFoundException,
 } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
@@ -35,7 +35,7 @@ export class CategoryService {
       return await this.categoryRepository.save(category)
     } catch (error) {
       if (error.code === PostgresError.UniqueViolation) {
-        throw new ConflictException(`Category ${category.topic} already exists`)
+        throw new ConflictException(`Category ${category.name} already exists`)
       }
     }
   }
@@ -47,7 +47,7 @@ export class CategoryService {
       return await this.categoryRepository.findOne({ where: { id } })
     } catch (error) {
       if (error.code === PostgresError.UniqueViolation) {
-        throw new ConflictException(`Category ${category.topic} already exists`)
+        throw new ConflictException(`Category ${category.name} already exists`)
       }
     }
   }

@@ -7,5 +7,5 @@ export class Category {
   @IsNotEmpty()
   @IsEnum(CategoryTopic)
   @ApiProperty({ enum: CategoryTopic })
-  topic: CategoryTopic
+  name: CategoryTopic
 }

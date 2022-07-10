@@ -8,5 +8,5 @@ export class CategoryEntity extends BaseEntity {
   id: string
 
   @Column({ type: 'enum', enum: CategoryTopic, unique: true })
-  topic: CategoryTopic
+  name: CategoryTopic
 }

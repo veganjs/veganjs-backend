@@ -47,12 +47,12 @@ async function bootstrap() {
   await app.register(fastifyCsrf)
   await app.register(fastifyHelmet)
 
-  const config = new DocumentBuilder()
+  const options = new DocumentBuilder()
     .setTitle('Veganjs API')
     .setVersion('1.0')
     .build()
 
-  const document = SwaggerModule.createDocument(app, config)
+  const document = SwaggerModule.createDocument(app, options)
   SwaggerModule.setup('api/swagger', app, document)
 
   await app.listen(8000)

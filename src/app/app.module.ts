@@ -7,9 +7,15 @@ import { HttpExceptionFilter } from '~/shared/filters'
 
 import { DatabaseModule } from '../config/database.module'
 import { CategoryModule } from '../app/category/category.module'
+import { IngredientModule } from '../app/ingredient/ingredient.module'
 
 @Module({
-  imports: [ConfigModule.forRoot(), DatabaseModule, CategoryModule],
+  imports: [
+    ConfigModule.forRoot(),
+    DatabaseModule,
+    CategoryModule,
+    IngredientModule,
+  ],
   providers: [
     {
       provide: APP_FILTER,
