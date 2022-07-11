@@ -1,6 +1,5 @@
 import { NestFactory } from '@nestjs/core'
 import { ConfigService } from '@nestjs/config'
-import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger'
 import {
   FastifyAdapter,
   NestFastifyApplication,
@@ -13,9 +12,9 @@ import fastifyRateLimit from '@fastify/rate-limit'
 import fastifyCsrf from '@fastify/csrf-protection'
 import { join } from 'path'
 
+import { AppModule } from '~/app/app.module'
 import { TrimPipe, ValidationPipe } from '~/shared/pipes'
-
-import { AppModule } from './app/app.module'
+import { setupSwagger } from '~/config/swagger.config'
 
 async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(
@@ -47,13 +46,7 @@ async function bootstrap() {
   await app.register(fastifyCsrf)
   await app.register(fastifyHelmet)
 
-  const options = new DocumentBuilder()
-    .setTitle('Veganjs API')
-    .setVersion('1.0')
-    .build()
-
-  const document = SwaggerModule.createDocument(app, options)
-  SwaggerModule.setup('api/swagger', app, document)
+  setupSwagger(app)
 
   await app.listen(8000)
 }
