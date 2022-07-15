@@ -8,8 +8,8 @@ import { Repository } from 'typeorm'
 
 import { PostgresError } from '~/shared/types'
 
-import { Category } from './category.dto'
-import { CategoryEntity } from './category.entity'
+import { CategoryPayload } from './dto/category.dto'
+import { CategoryEntity } from './entities/category.entity'
 
 @Injectable()
 export class CategoryService {
@@ -30,7 +30,7 @@ export class CategoryService {
     return result
   }
 
-  async createCategory(category: Category) {
+  async createCategory(category: CategoryPayload) {
     try {
       return await this.categoryRepository.save(category)
     } catch (error) {
@@ -40,7 +40,7 @@ export class CategoryService {
     }
   }
 
-  async updateCategory(id: string, category: Category) {
+  async updateCategory(id: string, category: CategoryPayload) {
     try {
       const result = await this.getCategory(id)
       await this.categoryRepository.update({ id: result.id }, category)

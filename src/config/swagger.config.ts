@@ -3,7 +3,7 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger'
 
 export function setupSwagger(app: NestFastifyApplication) {
   const options = new DocumentBuilder()
-    .setTitle('Veganjs API')
+    .setTitle('Veganjs cookbook API')
     .setVersion('1.0')
     .build()
 

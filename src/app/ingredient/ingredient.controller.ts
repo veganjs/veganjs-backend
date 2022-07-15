@@ -11,16 +11,16 @@ import {
 } from '@nestjs/common'
 import {
   ApiTags,
+  ApiQuery,
   ApiOperation,
   ApiOkResponse,
-  ApiNotFoundResponse,
-  ApiBadRequestResponse,
   ApiCreatedResponse,
   ApiConflictResponse,
-  ApiQuery,
+  ApiNotFoundResponse,
+  ApiBadRequestResponse,
 } from '@nestjs/swagger'
 
-import { Ingredient } from './ingredient.dto'
+import { Ingredient, IngredientPayload } from './dto/ingredient.dto'
 import { IngredientService } from './ingredient.service'
 
 @Controller('ingredients')
@@ -29,9 +29,9 @@ export class IngredientController {
   constructor(private readonly ingredientService: IngredientService) {}
 
   @Get()
-  @ApiOkResponse()
+  @ApiOkResponse({ type: [Ingredient], description: 'Ingredients list' })
   @ApiOperation({ summary: 'Get all ingredients' })
-  @ApiQuery({ name: 'search', required: false })
+  @ApiQuery({ name: 'search', description: 'Search query', required: false })
   getAll(@Query('search') search: string) {
     if (search) {
       return this.ingredientService.searchIngredients(search)
@@ -40,40 +40,40 @@ export class IngredientController {
   }
 
   @Get(':id')
-  @ApiOkResponse()
-  @ApiNotFoundResponse()
-  @ApiBadRequestResponse()
+  @ApiOkResponse({ type: Ingredient, description: 'Ingredient' })
+  @ApiNotFoundResponse({ description: 'Ingredient not found' })
+  @ApiBadRequestResponse({ description: 'Invalid parameter' })
   @ApiOperation({ summary: 'Get ingredient by id' })
   getById(@Param('id', ParseUUIDPipe) id: string) {
     return this.ingredientService.getIngredient(id)
   }
 
   @Post()
-  @ApiCreatedResponse()
-  @ApiConflictResponse()
-  @ApiBadRequestResponse()
+  @ApiCreatedResponse({ type: Ingredient, description: 'Created ingredient' })
+  @ApiConflictResponse({ description: 'Ingredient already exists' })
+  @ApiBadRequestResponse({ description: 'Invalid body' })
   @ApiOperation({ summary: 'Create new ingredient' })
-  create(@Body() ingredient: Ingredient) {
+  create(@Body() ingredient: IngredientPayload) {
     return this.ingredientService.createIngredient(ingredient)
   }
 
   @Put(':id')
-  @ApiOkResponse()
-  @ApiConflictResponse()
-  @ApiNotFoundResponse()
-  @ApiBadRequestResponse()
+  @ApiOkResponse({ type: Ingredient, description: 'Updated ingredient' })
+  @ApiConflictResponse({ description: 'Ingredient already exists' })
+  @ApiNotFoundResponse({ description: 'Ingredient not found' })
+  @ApiBadRequestResponse({ description: 'Invalid body' })
   @ApiOperation({ summary: 'Update ingredient by id' })
   update(
     @Param('id', ParseUUIDPipe) id: string,
-    @Body() ingredient: Ingredient,
+    @Body() ingredient: IngredientPayload,
   ) {
     return this.ingredientService.updateIngredient(id, ingredient)
   }
 
   @Delete(':id')
-  @ApiOkResponse()
-  @ApiNotFoundResponse()
-  @ApiBadRequestResponse()
+  @ApiOkResponse({ description: 'Ingredient has been deleted' })
+  @ApiNotFoundResponse({ description: 'Ingredient not found' })
+  @ApiBadRequestResponse({ description: 'Invalid parameter' })
   @ApiOperation({ summary: 'Delete ingredient by id' })
   remove(@Param('id', ParseUUIDPipe) id: string) {
     return this.ingredientService.deleteIngredient(id)

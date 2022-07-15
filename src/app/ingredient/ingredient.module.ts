@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common'
 import { TypeOrmModule } from '@nestjs/typeorm'
 
-import { IngredientService } from './ingredient.service'
+import { IngredientEntity } from './entities/ingredient.entity'
 import { IngredientController } from './ingredient.controller'
-import { IngredientEntity } from './ingredient.entity'
+import { IngredientService } from './ingredient.service'
 
 @Module({
   imports: [TypeOrmModule.forFeature([IngredientEntity])],

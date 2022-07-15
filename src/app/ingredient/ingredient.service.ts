@@ -8,8 +8,8 @@ import { ILike, Repository } from 'typeorm'
 
 import { PostgresError } from '~/shared/types'
 
-import { Ingredient } from './ingredient.dto'
-import { IngredientEntity } from './ingredient.entity'
+import { IngredientPayload } from './dto/ingredient.dto'
+import { IngredientEntity } from './entities/ingredient.entity'
 
 @Injectable()
 export class IngredientService {
@@ -38,7 +38,7 @@ export class IngredientService {
     return result
   }
 
-  async createIngredient(ingredient: Ingredient) {
+  async createIngredient(ingredient: IngredientPayload) {
     try {
       return await this.ingredientRepository.save(ingredient)
     } catch (error) {
@@ -50,7 +50,7 @@ export class IngredientService {
     }
   }
 
-  async updateIngredient(id: string, ingredient: Ingredient) {
+  async updateIngredient(id: string, ingredient: IngredientPayload) {
     try {
       const result = await this.getIngredient(id)
       await this.ingredientRepository.update({ id: result.id }, ingredient)

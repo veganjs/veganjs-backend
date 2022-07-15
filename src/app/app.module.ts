@@ -8,6 +8,7 @@ import { HttpExceptionFilter } from '~/shared/filters'
 import { DatabaseModule } from '../config/database.module'
 import { CategoryModule } from '../app/category/category.module'
 import { IngredientModule } from '../app/ingredient/ingredient.module'
+// import { RecipeModule } from '../app/recipe/recipe.module'
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { IngredientModule } from '../app/ingredient/ingredient.module'
     DatabaseModule,
     CategoryModule,
     IngredientModule,
+    // RecipeModule,
   ],
   providers: [
     {

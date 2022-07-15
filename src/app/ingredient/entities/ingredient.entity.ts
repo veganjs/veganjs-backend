@@ -1,0 +1,24 @@
+import {
+  Column,
+  Entity,
+  // OneToMany,
+  BaseEntity,
+  PrimaryGeneratedColumn,
+} from 'typeorm'
+
+// import { RecipeIngredientEntity } from '../../recipe/entities/recipe-ingredient.entity'
+
+@Entity()
+export class IngredientEntity extends BaseEntity {
+  @PrimaryGeneratedColumn('uuid')
+  id: string
+
+  @Column({ unique: true })
+  name: string
+
+  // @OneToMany(
+  //   () => RecipeIngredientEntity,
+  //   (recipeIngredient) => recipeIngredient.ingredient,
+  // )
+  // recipes: RecipeIngredientEntity[]
+}
