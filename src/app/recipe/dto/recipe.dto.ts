@@ -3,8 +3,10 @@ import {
   IsUUID,
   IsString,
   IsNotEmpty,
+  ArrayNotEmpty,
   ValidateNested,
 } from 'class-validator'
+import { Type } from 'class-transformer'
 import { ApiProperty } from '@nestjs/swagger'
 
 import {
@@ -24,11 +26,13 @@ export class RecipePayload {
   description: string
 
   @IsArray()
+  @ArrayNotEmpty()
   @ApiProperty({
     isArray: true,
     type: RecipeIngredientPayload,
   })
   @ValidateNested({ each: true })
+  @Type(() => RecipeIngredientPayload)
   ingredients: RecipeIngredientPayload[]
 }
 

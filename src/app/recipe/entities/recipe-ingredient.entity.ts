@@ -8,6 +8,7 @@ import {
 } from 'typeorm'
 import { Exclude } from 'class-transformer'
 
+import { ColumnNumericTransformer } from '~/shared/transformers'
 import { IngredientEntity } from '../../ingredient/entities/ingredient.entity'
 import { RecipeEntity } from './recipe.entity'
 import { MeasureUnit } from '../recipe.types'
@@ -21,7 +22,11 @@ export class RecipeIngredientEntity extends BaseEntity {
   @Exclude()
   recipeId: string
 
-  @Column({ type: 'decimal' })
+  @Column('numeric', {
+    precision: 7,
+    scale: 2,
+    transformer: new ColumnNumericTransformer(),
+  })
   amount: number
 
   @Column({ type: 'enum', enum: MeasureUnit, nullable: true })

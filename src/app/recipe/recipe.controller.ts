@@ -43,6 +43,7 @@ export class RecipeController {
   @Post()
   @ApiCreatedResponse({ type: Recipe, description: 'Created recipe' })
   @ApiBadRequestResponse({ description: 'Invalid body' })
+  @ApiNotFoundResponse({ description: 'Ingredients not found' })
   @ApiOperation({ summary: 'Create new recipe' })
   create(@Body() recipe: RecipePayload) {
     return this.recipeService.createRecipe(recipe)

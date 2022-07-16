@@ -4,7 +4,7 @@ import {
   NotFoundException,
 } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
-import { ILike, Repository } from 'typeorm'
+import { ILike, In, Repository } from 'typeorm'
 
 import { PostgresError } from '~/shared/types'
 
@@ -20,6 +20,12 @@ export class IngredientService {
 
   async getAllIngredients() {
     return await this.ingredientRepository.find()
+  }
+
+  async getIngredientsByIds(ids: string[]) {
+    return await this.ingredientRepository.find({
+      where: { id: In(ids) },
+    })
   }
 
   async searchIngredients(query: string) {
