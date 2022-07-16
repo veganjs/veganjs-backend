@@ -18,7 +18,7 @@ export class IngredientService {
     private ingredientRepository: Repository<IngredientEntity>,
   ) {}
 
-  async getIngredients() {
+  async getAllIngredients() {
     return await this.ingredientRepository.find()
   }
 
@@ -30,7 +30,7 @@ export class IngredientService {
     })
   }
 
-  async getIngredient(id: string) {
+  async getIngredientById(id: string) {
     const result = await this.ingredientRepository.findOne({ where: { id } })
     if (!result) {
       throw new NotFoundException()
@@ -52,7 +52,7 @@ export class IngredientService {
 
   async updateIngredient(id: string, ingredient: IngredientPayload) {
     try {
-      const result = await this.getIngredient(id)
+      const result = await this.getIngredientById(id)
       await this.ingredientRepository.update({ id: result.id }, ingredient)
       return await this.ingredientRepository.findOne({ where: { id } })
     } catch (error) {

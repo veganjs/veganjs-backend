@@ -18,11 +18,11 @@ export class CategoryService {
     private categoryRepository: Repository<CategoryEntity>,
   ) {}
 
-  async getCategories() {
+  async getAllCategories() {
     return await this.categoryRepository.find()
   }
 
-  async getCategory(id: string) {
+  async getCategoryById(id: string) {
     const result = await this.categoryRepository.findOne({ where: { id } })
     if (!result) {
       throw new NotFoundException()
@@ -42,7 +42,7 @@ export class CategoryService {
 
   async updateCategory(id: string, category: CategoryPayload) {
     try {
-      const result = await this.getCategory(id)
+      const result = await this.getCategoryById(id)
       await this.categoryRepository.update({ id: result.id }, category)
       return await this.categoryRepository.findOne({ where: { id } })
     } catch (error) {

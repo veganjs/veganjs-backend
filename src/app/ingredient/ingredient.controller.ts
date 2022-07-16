@@ -36,7 +36,7 @@ export class IngredientController {
     if (search) {
       return this.ingredientService.searchIngredients(search)
     }
-    return this.ingredientService.getIngredients()
+    return this.ingredientService.getAllIngredients()
   }
 
   @Get(':id')
@@ -45,7 +45,7 @@ export class IngredientController {
   @ApiBadRequestResponse({ description: 'Invalid parameter' })
   @ApiOperation({ summary: 'Get ingredient by id' })
   getById(@Param('id', ParseUUIDPipe) id: string) {
-    return this.ingredientService.getIngredient(id)
+    return this.ingredientService.getIngredientById(id)
   }
 
   @Post()

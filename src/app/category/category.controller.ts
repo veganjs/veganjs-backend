@@ -30,7 +30,7 @@ export class CategoryController {
   @ApiOkResponse({ type: [Category], description: 'Categories list' })
   @ApiOperation({ summary: 'Get all categories' })
   getAll() {
-    return this.categoryService.getCategories()
+    return this.categoryService.getAllCategories()
   }
 
   @Get(':id')
@@ -39,7 +39,7 @@ export class CategoryController {
   @ApiBadRequestResponse({ description: 'Invalid parameter' })
   @ApiOperation({ summary: 'Get category by id' })
   getById(@Param('id', ParseUUIDPipe) id: string) {
-    return this.categoryService.getCategory(id)
+    return this.categoryService.getCategoryById(id)
   }
 
   @Post()

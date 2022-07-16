@@ -1,12 +1,12 @@
 import {
   Column,
   Entity,
-  // OneToMany,
+  OneToMany,
   BaseEntity,
   PrimaryGeneratedColumn,
 } from 'typeorm'
 
-// import { RecipeIngredientEntity } from '../../recipe/entities/recipe-ingredient.entity'
+import { RecipeIngredientEntity } from '../../recipe/entities/recipe-ingredient.entity'
 
 @Entity()
 export class IngredientEntity extends BaseEntity {
@@ -16,9 +16,10 @@ export class IngredientEntity extends BaseEntity {
   @Column({ unique: true })
   name: string
 
-  // @OneToMany(
-  //   () => RecipeIngredientEntity,
-  //   (recipeIngredient) => recipeIngredient.ingredient,
-  // )
-  // recipes: RecipeIngredientEntity[]
+  @OneToMany(
+    () => RecipeIngredientEntity,
+    (recipeIngredient) => recipeIngredient.ingredient,
+    { onDelete: 'CASCADE' },
+  )
+  recipes: RecipeIngredientEntity[]
 }
