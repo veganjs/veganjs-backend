@@ -11,7 +11,7 @@ import {
 } from '@nestjs/common'
 import {
   ApiTags,
-  ApiQuery,
+  // ApiQuery,
   ApiOperation,
   ApiOkResponse,
   ApiCreatedResponse,
@@ -20,7 +20,11 @@ import {
   ApiBadRequestResponse,
 } from '@nestjs/swagger'
 
+import { ApiPaginatedResponse } from '~/shared/decorators'
+import { PaginationOptions } from '~/shared/types'
+
 import { Ingredient, IngredientPayload } from './dto/ingredient.dto'
+import { IngredientEntity } from './entities/ingredient.entity'
 import { IngredientService } from './ingredient.service'
 
 @Controller('ingredients')
@@ -28,15 +32,16 @@ import { IngredientService } from './ingredient.service'
 export class IngredientController {
   constructor(private readonly ingredientService: IngredientService) {}
 
+  @ApiPaginatedResponse(IngredientEntity)
   @Get()
   @ApiOkResponse({ type: [Ingredient], description: 'Ingredients list' })
   @ApiOperation({ summary: 'Get all ingredients' })
-  @ApiQuery({ name: 'search', description: 'Search query', required: false })
-  getAll(@Query('search') search: string) {
-    if (search) {
-      return this.ingredientService.searchIngredients(search)
-    }
-    return this.ingredientService.getAllIngredients()
+  // @ApiQuery({ name: 'search', description: 'Search query', required: false })
+  getAll(@Query() options: PaginationOptions) {
+    // if (search) {
+    //   return this.ingredientService.searchIngredients(search)
+    // }
+    return this.ingredientService.getAllIngredients(options)
   }
 
   @Get(':id')

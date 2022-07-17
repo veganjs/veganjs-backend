@@ -6,7 +6,12 @@ import {
 import { InjectRepository } from '@nestjs/typeorm'
 import { ILike, In, Repository } from 'typeorm'
 
-import { PostgresError } from '~/shared/types'
+import {
+  Paginated,
+  PaginationMeta,
+  PaginationOptions,
+  PostgresError,
+} from '~/shared/types'
 
 import { IngredientPayload } from './dto/ingredient.dto'
 import { IngredientEntity } from './entities/ingredient.entity'
@@ -18,8 +23,20 @@ export class IngredientService {
     private ingredientRepository: Repository<IngredientEntity>,
   ) {}
 
-  async getAllIngredients() {
-    return await this.ingredientRepository.find()
+  async getAllIngredients(options: PaginationOptions) {
+    const queryBuilder =
+      this.ingredientRepository.createQueryBuilder('ingredient')
+
+    queryBuilder
+      .orderBy('ingredient.name', options.sort)
+      .skip(options.skip)
+      .take(options.limit)
+
+    const totalCount = await queryBuilder.getCount()
+    const { entities } = await queryBuilder.getRawAndEntities()
+
+    const meta = new PaginationMeta({ totalCount, options })
+    return new Paginated(entities, meta)
   }
 
   async getIngredientsByIds(ids: string[]) {
