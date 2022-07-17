@@ -3,9 +3,15 @@ import { ApiExtraModels, ApiOkResponse, getSchemaPath } from '@nestjs/swagger'
 
 import { Paginated } from '../types'
 
-export const ApiPaginatedResponse = <Model extends Type<unknown>>(
-  model: Model,
-) => {
+interface PaginatedResponseParams<Model> {
+  model: Model
+  description: string
+}
+
+export const ApiPaginatedResponse = <Model extends Type<unknown>>({
+  model,
+  description,
+}: PaginatedResponseParams<Model>) => {
   return applyDecorators(
     ApiExtraModels(Paginated),
     ApiOkResponse({
@@ -22,6 +28,7 @@ export const ApiPaginatedResponse = <Model extends Type<unknown>>(
           },
         ],
       },
+      description,
     }),
   )
 }

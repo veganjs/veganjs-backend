@@ -2,6 +2,8 @@ import { Inject, Injectable, NotFoundException } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { Repository } from 'typeorm'
 
+import { Paginated, PaginationMeta, PaginationOptions } from '~/shared/types'
+
 import { IngredientService } from '../ingredient/ingredient.service'
 import { IngredientEntity } from '../ingredient/entities/ingredient.entity'
 import { CategoryEntity } from '../category/entities/category.entity'
@@ -23,10 +25,27 @@ export class RecipeService {
     private ingredientsService: IngredientService,
   ) {}
 
-  async getAllRecipes() {
-    return await this.recipeRepository.find({
-      relations: ['ingredients', 'ingredients.ingredient'],
-    })
+  async getAllRecipes(query: string, options: PaginationOptions) {
+    const queryBuilder = this.recipeRepository.createQueryBuilder('recipe')
+
+    queryBuilder
+      .skip(options.skip)
+      .take(options.limit)
+      .leftJoinAndSelect('recipe.ingredients', 'ingredients')
+      .leftJoinAndSelect('ingredients.ingredient', 'ingredient')
+      .orderBy('recipe.title', options.sort)
+
+    if (query) {
+      queryBuilder.where('LOWER(recipe.title) LIKE LOWER(:query)', {
+        query: `%${query}%`,
+      })
+    }
+
+    const totalCount = await queryBuilder.getCount()
+    const { entities } = await queryBuilder.getRawAndEntities()
+
+    const meta = new PaginationMeta({ totalCount, options })
+    return new Paginated(entities, meta)
   }
 
   async getRecipeById(id: string) {

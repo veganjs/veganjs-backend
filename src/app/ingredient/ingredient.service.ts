@@ -4,7 +4,7 @@ import {
   NotFoundException,
 } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
-import { ILike, In, Repository } from 'typeorm'
+import { In, Repository } from 'typeorm'
 
 import {
   Paginated,
@@ -23,14 +23,20 @@ export class IngredientService {
     private ingredientRepository: Repository<IngredientEntity>,
   ) {}
 
-  async getAllIngredients(options: PaginationOptions) {
+  async getAllIngredients(query: string, options: PaginationOptions) {
     const queryBuilder =
       this.ingredientRepository.createQueryBuilder('ingredient')
 
     queryBuilder
-      .orderBy('ingredient.name', options.sort)
       .skip(options.skip)
       .take(options.limit)
+      .orderBy('ingredient.name', options.sort)
+
+    if (query) {
+      queryBuilder.where('LOWER(ingredient.name) LIKE LOWER(:query)', {
+        query: `%${query}%`,
+      })
+    }
 
     const totalCount = await queryBuilder.getCount()
     const { entities } = await queryBuilder.getRawAndEntities()
@@ -42,14 +48,6 @@ export class IngredientService {
   async getIngredientsByIds(ids: string[]) {
     return await this.ingredientRepository.find({
       where: { id: In(ids) },
-    })
-  }
-
-  async searchIngredients(query: string) {
-    return await this.ingredientRepository.find({
-      where: {
-        name: ILike(`%${query}%`),
-      },
     })
   }
 

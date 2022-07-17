@@ -2,6 +2,7 @@ import {
   Get,
   Post,
   Delete,
+  Query,
   Body,
   Param,
   Controller,
@@ -9,12 +10,16 @@ import {
 } from '@nestjs/common'
 import {
   ApiTags,
+  ApiQuery,
   ApiOperation,
   ApiOkResponse,
   ApiCreatedResponse,
   ApiNotFoundResponse,
   ApiBadRequestResponse,
 } from '@nestjs/swagger'
+
+import { ApiPaginatedResponse } from '~/shared/decorators'
+import { PaginationOptions } from '~/shared/types'
 
 import { RecipeService } from './recipe.service'
 import { Recipe, RecipePayload } from './dto/recipe.dto'
@@ -25,10 +30,11 @@ export class RecipeController {
   constructor(private readonly recipeService: RecipeService) {}
 
   @Get()
-  @ApiOkResponse({ type: [Recipe], description: 'Recipes list' })
+  @ApiPaginatedResponse({ model: Recipe, description: 'Recipes list' })
   @ApiOperation({ summary: 'Get all recipes' })
-  getAll() {
-    return this.recipeService.getAllRecipes()
+  @ApiQuery({ name: 'search', description: 'Search query', required: false })
+  getAll(@Query('search') search: string, @Query() options: PaginationOptions) {
+    return this.recipeService.getAllRecipes(search, options)
   }
 
   @Get(':id')
