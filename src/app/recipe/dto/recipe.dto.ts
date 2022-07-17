@@ -9,6 +9,7 @@ import {
 import { Type } from 'class-transformer'
 import { ApiProperty } from '@nestjs/swagger'
 
+import { Category } from '../../category/dto/category.dto'
 import {
   RecipeIngredient,
   RecipeIngredientPayload,
@@ -24,6 +25,10 @@ export class RecipePayload {
   @IsString()
   @ApiProperty()
   description: string
+
+  @IsUUID()
+  @ApiProperty()
+  categoryId: string
 
   @IsArray()
   @ArrayNotEmpty()
@@ -57,4 +62,7 @@ export class Recipe {
     type: RecipeIngredient,
   })
   ingredients: RecipeIngredient[]
+
+  @ApiProperty()
+  category: Category
 }

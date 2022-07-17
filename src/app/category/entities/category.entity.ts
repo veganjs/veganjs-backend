@@ -1,5 +1,12 @@
-import { Column, Entity, BaseEntity, PrimaryGeneratedColumn } from 'typeorm'
+import {
+  Column,
+  Entity,
+  BaseEntity,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm'
 
+import { RecipeEntity } from '../../recipe/entities/recipe.entity'
 import { CategoryTopic } from '../category.types'
 
 @Entity()
@@ -9,4 +16,7 @@ export class CategoryEntity extends BaseEntity {
 
   @Column({ type: 'enum', enum: CategoryTopic, unique: true })
   name: CategoryTopic
+
+  @OneToMany(() => RecipeEntity, (recipe) => recipe.category)
+  recipes: RecipeEntity[]
 }

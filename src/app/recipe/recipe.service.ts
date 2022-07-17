@@ -3,8 +3,9 @@ import { InjectRepository } from '@nestjs/typeorm'
 import { Repository } from 'typeorm'
 
 import { IngredientService } from '../ingredient/ingredient.service'
-import { RecipeIngredientEntity } from './entities/recipe-ingredient.entity'
 import { IngredientEntity } from '../ingredient/entities/ingredient.entity'
+import { CategoryEntity } from '../category/entities/category.entity'
+import { RecipeIngredientEntity } from './entities/recipe-ingredient.entity'
 import { RecipeEntity } from './entities/recipe.entity'
 import { RecipePayload } from './dto/recipe.dto'
 import { RecipeIngredientPayload } from './dto/recipe-ingredient.dto'
@@ -12,6 +13,8 @@ import { RecipeIngredientPayload } from './dto/recipe-ingredient.dto'
 @Injectable()
 export class RecipeService {
   constructor(
+    @InjectRepository(CategoryEntity)
+    private categoryRepository: Repository<CategoryEntity>,
     @InjectRepository(RecipeEntity)
     private recipeRepository: Repository<RecipeEntity>,
     @InjectRepository(RecipeIngredientEntity)
@@ -55,10 +58,14 @@ export class RecipeService {
   ) {
     return Promise.all(
       ingredients.map((ingredient) => {
-        const ingredientDto = ingredientsPayload.find(
+        const ingredientPayload = ingredientsPayload.find(
           (payload) => ingredient.id === payload.id,
         )
-        return this.saveRecipeIngredient(ingredientDto, ingredient, recipeId)
+        return this.saveRecipeIngredient(
+          ingredientPayload,
+          ingredient,
+          recipeId,
+        )
       }),
     )
   }
@@ -71,12 +78,17 @@ export class RecipeService {
       ingredientIds,
     )
 
+    const category = await this.categoryRepository.findOne({
+      where: { id: payload.categoryId },
+    })
+
     if (!ingredients.length) {
       throw new NotFoundException()
     }
 
     recipe.title = payload.title
     recipe.description = payload.description
+    recipe.category = category ?? null
 
     const newRecipe = await this.recipeRepository.save(recipe)
 
