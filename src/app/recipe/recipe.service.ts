@@ -9,8 +9,8 @@ import { IngredientEntity } from '../ingredient/entities/ingredient.entity'
 import { CategoryEntity } from '../category/entities/category.entity'
 import { RecipeIngredientEntity } from './entities/recipe-ingredient.entity'
 import { RecipeEntity } from './entities/recipe.entity'
-import { RecipePayload } from './dto/recipe.dto'
-import { RecipeIngredientPayload } from './dto/recipe-ingredient.dto'
+import { RecipeIngredientDto } from './dto/recipe-ingredient.dto'
+import { RecipeDto } from './dto/recipe.dto'
 
 @Injectable()
 export class RecipeService {
@@ -56,7 +56,7 @@ export class RecipeService {
   }
 
   private async saveRecipeIngredient(
-    ingredientPayload: RecipeIngredientPayload,
+    ingredientPayload: RecipeIngredientDto,
     ingredient: IngredientEntity,
     recipeId: string,
   ) {
@@ -71,7 +71,7 @@ export class RecipeService {
   }
 
   private async saveRecipeIngredients(
-    ingredientsPayload: RecipeIngredientPayload[],
+    ingredientsPayload: RecipeIngredientDto[],
     ingredients: IngredientEntity[],
     recipeId: string,
   ) {
@@ -89,7 +89,7 @@ export class RecipeService {
     )
   }
 
-  async createRecipe(payload: RecipePayload) {
+  async createRecipe(payload: RecipeDto) {
     const recipe = new RecipeEntity()
 
     const ingredientIds = payload.ingredients.map((ingredient) => ingredient.id)

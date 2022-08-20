@@ -3,7 +3,7 @@ import { ApiProperty } from '@nestjs/swagger'
 
 import { CategoryTopic } from '../category.types'
 
-export class CategoryPayload {
+export class CategoryDto {
   @IsNotEmpty()
   @IsEnum(CategoryTopic)
   @ApiProperty({ enum: CategoryTopic })

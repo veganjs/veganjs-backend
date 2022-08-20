@@ -1,7 +1,7 @@
 import { IsNotEmpty, IsUUID, IsString } from 'class-validator'
 import { ApiProperty } from '@nestjs/swagger'
 
-export class IngredientPayload {
+export class IngredientDto {
   @IsNotEmpty()
   @IsString()
   @ApiProperty()

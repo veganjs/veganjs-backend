@@ -21,9 +21,11 @@ import {
 import { ApiPaginatedResponse } from '~/shared/decorators'
 import { PaginationOptions } from '~/shared/types'
 
+import { Auth } from '../auth/decorators/auth.decorator'
 import { RecipeService } from './recipe.service'
-import { Recipe, RecipePayload } from './dto/recipe.dto'
+import { Recipe, RecipeDto } from './dto/recipe.dto'
 
+// TODO edit recipe
 @Controller('recipes')
 @ApiTags('recipes')
 export class RecipeController {
@@ -47,15 +49,17 @@ export class RecipeController {
   }
 
   @Post()
+  @Auth()
   @ApiCreatedResponse({ type: Recipe, description: 'Created recipe' })
   @ApiBadRequestResponse({ description: 'Invalid body' })
   @ApiNotFoundResponse({ description: 'Ingredients not found' })
   @ApiOperation({ summary: 'Create new recipe' })
-  create(@Body() recipe: RecipePayload) {
+  create(@Body() recipe: RecipeDto) {
     return this.recipeService.createRecipe(recipe)
   }
 
   @Delete(':id')
+  @Auth()
   @ApiOkResponse({ description: 'Recipe has been deleted' })
   @ApiNotFoundResponse({ description: 'Recipe not found' })
   @ApiBadRequestResponse({ description: 'Invalid parameter' })

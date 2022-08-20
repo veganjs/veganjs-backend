@@ -10,12 +10,9 @@ import { Type } from 'class-transformer'
 import { ApiProperty } from '@nestjs/swagger'
 
 import { Category } from '../../category/dto/category.dto'
-import {
-  RecipeIngredient,
-  RecipeIngredientPayload,
-} from './recipe-ingredient.dto'
+import { RecipeIngredient, RecipeIngredientDto } from './recipe-ingredient.dto'
 
-export class RecipePayload {
+export class RecipeDto {
   @IsNotEmpty()
   @IsString()
   @ApiProperty()
@@ -34,11 +31,11 @@ export class RecipePayload {
   @ArrayNotEmpty()
   @ApiProperty({
     isArray: true,
-    type: RecipeIngredientPayload,
+    type: RecipeIngredientDto,
   })
   @ValidateNested({ each: true })
-  @Type(() => RecipeIngredientPayload)
-  ingredients: RecipeIngredientPayload[]
+  @Type(() => RecipeIngredientDto)
+  ingredients: RecipeIngredientDto[]
 }
 
 export class Recipe {

@@ -33,7 +33,7 @@ export class RecipeIngredient {
   ingredient: Ingredient
 }
 
-export class RecipeIngredientPayload {
+export class RecipeIngredientDto {
   @IsUUID()
   @IsNotEmpty()
   @IsString()

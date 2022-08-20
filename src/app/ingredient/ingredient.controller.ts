@@ -23,7 +23,9 @@ import {
 import { ApiPaginatedResponse } from '~/shared/decorators'
 import { PaginationOptions } from '~/shared/types'
 
-import { Ingredient, IngredientPayload } from './dto/ingredient.dto'
+import { Role } from '../auth/auth.types'
+import { Auth } from '../auth/decorators/auth.decorator'
+import { Ingredient, IngredientDto } from './dto/ingredient.dto'
 import { IngredientService } from './ingredient.service'
 
 @Controller('ingredients')
@@ -49,15 +51,17 @@ export class IngredientController {
   }
 
   @Post()
+  @Auth(Role.ADMIN)
   @ApiCreatedResponse({ type: Ingredient, description: 'Created ingredient' })
   @ApiConflictResponse({ description: 'Ingredient already exists' })
   @ApiBadRequestResponse({ description: 'Invalid body' })
   @ApiOperation({ summary: 'Create new ingredient' })
-  create(@Body() ingredient: IngredientPayload) {
+  create(@Body() ingredient: IngredientDto) {
     return this.ingredientService.createIngredient(ingredient)
   }
 
   @Put(':id')
+  @Auth(Role.ADMIN)
   @ApiOkResponse({ type: Ingredient, description: 'Updated ingredient' })
   @ApiConflictResponse({ description: 'Ingredient already exists' })
   @ApiNotFoundResponse({ description: 'Ingredient not found' })
@@ -65,12 +69,13 @@ export class IngredientController {
   @ApiOperation({ summary: 'Update ingredient by id' })
   update(
     @Param('id', ParseUUIDPipe) id: string,
-    @Body() ingredient: IngredientPayload,
+    @Body() ingredient: IngredientDto,
   ) {
     return this.ingredientService.updateIngredient(id, ingredient)
   }
 
   @Delete(':id')
+  @Auth(Role.ADMIN)
   @ApiOkResponse({ description: 'Ingredient has been deleted' })
   @ApiNotFoundResponse({ description: 'Ingredient not found' })
   @ApiBadRequestResponse({ description: 'Invalid parameter' })

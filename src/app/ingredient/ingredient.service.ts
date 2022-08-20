@@ -13,7 +13,7 @@ import {
   PostgresError,
 } from '~/shared/types'
 
-import { IngredientPayload } from './dto/ingredient.dto'
+import { IngredientDto } from './dto/ingredient.dto'
 import { IngredientEntity } from './entities/ingredient.entity'
 
 @Injectable()
@@ -59,7 +59,7 @@ export class IngredientService {
     return result
   }
 
-  async createIngredient(ingredient: IngredientPayload) {
+  async createIngredient(ingredient: IngredientDto) {
     try {
       return await this.ingredientRepository.save(ingredient)
     } catch (error) {
@@ -71,7 +71,7 @@ export class IngredientService {
     }
   }
 
-  async updateIngredient(id: string, ingredient: IngredientPayload) {
+  async updateIngredient(id: string, ingredient: IngredientDto) {
     try {
       const result = await this.getIngredientById(id)
       await this.ingredientRepository.update({ id: result.id }, ingredient)

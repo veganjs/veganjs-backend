@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common'
 import { TypeOrmModule } from '@nestjs/typeorm'
 
+import { AuthModule } from '../auth/auth.module'
 import { IngredientService } from '../ingredient/ingredient.service'
 import { IngredientEntity } from '../ingredient/entities/ingredient.entity'
 import { CategoryEntity } from '../category/entities/category.entity'
@@ -17,6 +18,7 @@ import { RecipeService } from './recipe.service'
       IngredientEntity,
       RecipeIngredientEntity,
     ]),
+    AuthModule,
   ],
   controllers: [RecipeController],
   providers: [RecipeService, IngredientService],
