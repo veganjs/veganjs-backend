@@ -21,7 +21,8 @@ import {
 import { ApiPaginatedResponse } from '~/shared/decorators'
 import { PaginationOptions } from '~/shared/types'
 
-import { Auth } from '../auth/decorators/auth.decorator'
+import { Role } from '../auth/auth.types'
+import { JwtAuthRequired } from '../auth/decorators/jwt-auth.decorator'
 import { RecipeService } from './recipe.service'
 import { Recipe, RecipeDto } from './dto/recipe.dto'
 
@@ -49,7 +50,7 @@ export class RecipeController {
   }
 
   @Post()
-  @Auth()
+  @JwtAuthRequired(Role.ADMIN)
   @ApiCreatedResponse({ type: Recipe, description: 'Created recipe' })
   @ApiBadRequestResponse({ description: 'Invalid body' })
   @ApiNotFoundResponse({ description: 'Ingredients not found' })
@@ -59,7 +60,7 @@ export class RecipeController {
   }
 
   @Delete(':id')
-  @Auth()
+  @JwtAuthRequired(Role.ADMIN)
   @ApiOkResponse({ description: 'Recipe has been deleted' })
   @ApiNotFoundResponse({ description: 'Recipe not found' })
   @ApiBadRequestResponse({ description: 'Invalid parameter' })

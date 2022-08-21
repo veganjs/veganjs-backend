@@ -19,7 +19,7 @@ import {
 } from '@nestjs/swagger'
 
 import { Role } from '../auth/auth.types'
-import { Auth } from '../auth/decorators/auth.decorator'
+import { JwtAuthRequired } from '../auth/decorators/jwt-auth.decorator'
 import { Category, CategoryDto } from './dto/category.dto'
 import { CategoryService } from './category.service'
 
@@ -45,7 +45,7 @@ export class CategoryController {
   }
 
   @Post()
-  @Auth(Role.ADMIN)
+  @JwtAuthRequired(Role.ADMIN)
   @ApiCreatedResponse({ type: Category, description: 'Created category' })
   @ApiConflictResponse({ description: 'Category already exists' })
   @ApiBadRequestResponse({ description: 'Invalid body' })
@@ -55,7 +55,7 @@ export class CategoryController {
   }
 
   @Put(':id')
-  @Auth(Role.ADMIN)
+  @JwtAuthRequired(Role.ADMIN)
   @ApiOkResponse({ type: Category, description: 'Updated category' })
   @ApiConflictResponse({ description: 'Category already exists' })
   @ApiNotFoundResponse({ description: 'Category not found' })
@@ -69,7 +69,7 @@ export class CategoryController {
   }
 
   @Delete(':id')
-  @Auth(Role.ADMIN)
+  @JwtAuthRequired(Role.ADMIN)
   @ApiOkResponse({ description: 'Category has been deleted' })
   @ApiNotFoundResponse({ description: 'Category not found' })
   @ApiBadRequestResponse({ description: 'Invalid parameter' })

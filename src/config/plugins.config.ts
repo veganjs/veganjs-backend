@@ -1,6 +1,7 @@
 import { NestFastifyApplication } from '@nestjs/platform-fastify'
 import { ConfigService } from '@nestjs/config'
 import fastifyCors from '@fastify/cors'
+import fastifyCookie from '@fastify/cookie'
 import fastifyStatic from '@fastify/static'
 import fastifyHelmet from '@fastify/helmet'
 import fastifyRateLimit from '@fastify/rate-limit'
@@ -20,6 +21,9 @@ export async function loadPlugins(app: NestFastifyApplication) {
   await app.register(fastifyRateLimit, {
     max: 20,
     timeWindow: '1 minute',
+  })
+  await app.register(fastifyCookie, {
+    secret: configService.get<string>('COOKIE_SECRET'),
   })
   await app.register(fastifyCsrf)
   await app.register(fastifyHelmet)

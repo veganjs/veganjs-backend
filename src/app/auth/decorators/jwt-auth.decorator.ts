@@ -1,18 +1,18 @@
 import { applyDecorators, UseGuards } from '@nestjs/common'
 import {
-  ApiBearerAuth,
+  ApiCookieAuth,
   ApiForbiddenResponse,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger'
 
 import { Role } from '../auth.types'
-import { AuthGuard } from '../guards/jwt-auth.guard'
+import { JwtAuthGuard } from '../guards/jwt-auth.guard'
 import { RolesGuard } from '../guards/roles.guard'
 import { RolesAllowed } from './roles.decorator'
 
-export function Auth(...roles: Role[]) {
+export function JwtAuthRequired(...roles: Role[]) {
   const defaultDecorators = [
-    ApiBearerAuth('access-token'),
+    ApiCookieAuth(),
     ApiUnauthorizedResponse({ description: 'Invalid credentials' }),
   ]
 
@@ -20,14 +20,10 @@ export function Auth(...roles: Role[]) {
     return applyDecorators(
       ...defaultDecorators,
       RolesAllowed(...roles),
-      UseGuards(AuthGuard, RolesGuard),
+      UseGuards(JwtAuthGuard, RolesGuard),
       ApiForbiddenResponse({ description: 'Access denied' }),
     )
   }
 
-  return applyDecorators(
-    ...defaultDecorators,
-    UseGuards(AuthGuard),
-    ApiBearerAuth('access-token'),
-  )
+  return applyDecorators(...defaultDecorators, UseGuards(JwtAuthGuard))
 }

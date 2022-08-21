@@ -1,6 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger'
 import {
-  IsJWT,
   IsString,
   IsNotEmpty,
   Matches,
@@ -37,11 +36,4 @@ export class SignUpCredentialsDto {
   })
   @ApiProperty()
   password: string
-}
-
-export class AuthToken {
-  @IsString()
-  @IsJWT()
-  @ApiProperty()
-  accessToken: string
 }

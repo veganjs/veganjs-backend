@@ -13,7 +13,7 @@ import { Role } from '../../auth/auth.types'
 @Entity()
 export class UserEntity extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
-  id: number
+  id: string
 
   @Column({ unique: true })
   username: string
@@ -26,6 +26,10 @@ export class UserEntity extends BaseEntity {
   @Exclude()
   salt: string
 
+  @Column({ nullable: true })
+  @Exclude()
+  refreshToken: string
+
   @Column({
     type: 'enum',
     array: true,
@@ -33,6 +37,7 @@ export class UserEntity extends BaseEntity {
     nullable: true,
     default: null,
   })
+  @Exclude()
   roles: Role[]
 
   @BeforeInsert()

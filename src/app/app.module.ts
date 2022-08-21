@@ -16,6 +16,7 @@ import { AuthModule } from '../app/auth/auth.module'
   imports: [
     ConfigModule.forRoot({
       cache: true,
+      isGlobal: true,
     }),
     DatabaseModule,
     CategoryModule,

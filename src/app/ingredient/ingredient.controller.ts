@@ -24,7 +24,7 @@ import { ApiPaginatedResponse } from '~/shared/decorators'
 import { PaginationOptions } from '~/shared/types'
 
 import { Role } from '../auth/auth.types'
-import { Auth } from '../auth/decorators/auth.decorator'
+import { JwtAuthRequired } from '../auth/decorators/jwt-auth.decorator'
 import { Ingredient, IngredientDto } from './dto/ingredient.dto'
 import { IngredientService } from './ingredient.service'
 
@@ -51,7 +51,7 @@ export class IngredientController {
   }
 
   @Post()
-  @Auth(Role.ADMIN)
+  @JwtAuthRequired(Role.ADMIN)
   @ApiCreatedResponse({ type: Ingredient, description: 'Created ingredient' })
   @ApiConflictResponse({ description: 'Ingredient already exists' })
   @ApiBadRequestResponse({ description: 'Invalid body' })
@@ -61,7 +61,7 @@ export class IngredientController {
   }
 
   @Put(':id')
-  @Auth(Role.ADMIN)
+  @JwtAuthRequired(Role.ADMIN)
   @ApiOkResponse({ type: Ingredient, description: 'Updated ingredient' })
   @ApiConflictResponse({ description: 'Ingredient already exists' })
   @ApiNotFoundResponse({ description: 'Ingredient not found' })
@@ -75,7 +75,7 @@ export class IngredientController {
   }
 
   @Delete(':id')
-  @Auth(Role.ADMIN)
+  @JwtAuthRequired(Role.ADMIN)
   @ApiOkResponse({ description: 'Ingredient has been deleted' })
   @ApiNotFoundResponse({ description: 'Ingredient not found' })
   @ApiBadRequestResponse({ description: 'Invalid parameter' })
