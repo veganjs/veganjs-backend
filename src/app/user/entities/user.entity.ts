@@ -13,6 +13,7 @@ import { Role } from '../../auth/auth.types'
 @Entity()
 export class UserEntity extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
+  @Exclude()
   id: string
 
   @Column({ unique: true })

@@ -50,6 +50,15 @@ export class AuthService {
     ]
   }
 
+  private getJwtPayload(user: UserEntity) {
+    const payload: JwtPayload = {
+      id: user.id,
+      roles: user.roles,
+      username: user.username,
+    }
+    return payload
+  }
+
   async signIn(reply: FastifyReply, credentials: LoginCredentialsDto) {
     const user = await this.userService.validateUserPassword(credentials)
 
@@ -57,12 +66,7 @@ export class AuthService {
       throw new UnauthorizedException('Invalid credentials')
     }
 
-    const payload: JwtPayload = {
-      id: user.id,
-      roles: user.roles,
-      username: user.username,
-    }
-
+    const payload = this.getJwtPayload(user)
     const accessTokenCookie = this.getJwtAccessTokenCookie(payload)
     const { cookie: refreshTokenCookie, refreshToken } =
       this.getJwtRefreshTokenCookie(payload)
@@ -79,12 +83,7 @@ export class AuthService {
   }
 
   async refreshToken(reply: FastifyReply, user: UserEntity) {
-    const payload: JwtPayload = {
-      id: user.id,
-      roles: user.roles,
-      username: user.username,
-    }
-
+    const payload = this.getJwtPayload(user)
     const accessTokenCookie = this.getJwtAccessTokenCookie(payload)
     reply.header('Set-Cookie', accessTokenCookie)
   }
