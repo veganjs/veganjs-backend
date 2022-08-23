@@ -8,15 +8,15 @@ import {
   Controller,
   ParseUUIDPipe,
 } from '@nestjs/common'
+import { ApiTags } from '@nestjs/swagger'
+
 import {
-  ApiTags,
-  ApiOperation,
-  ApiOkResponse,
-  ApiNotFoundResponse,
-  ApiBadRequestResponse,
-  ApiCreatedResponse,
-  ApiConflictResponse,
-} from '@nestjs/swagger'
+  ApiGetMany,
+  ApiGetOne,
+  ApiCreate,
+  ApiUpdate,
+  ApiDelete,
+} from '~/shared/decorators'
 
 import { Role } from '../auth/auth.types'
 import { JwtAuthRequired } from '../auth/decorators/jwt-auth.decorator'
@@ -26,42 +26,31 @@ import { CategoryService } from './category.service'
 @Controller('categories')
 @ApiTags('categories')
 export class CategoryController {
-  constructor(private categoryService: CategoryService) {}
+  constructor(private readonly categoryService: CategoryService) {}
 
   @Get()
-  @ApiOkResponse({ type: [Category], description: 'Categories list' })
-  @ApiOperation({ summary: 'Get all categories' })
-  getAll() {
+  @ApiGetMany({ model: Category })
+  getAllCategories() {
     return this.categoryService.getAllCategories()
   }
 
   @Get(':id')
-  @ApiOkResponse({ type: Category, description: 'Category' })
-  @ApiNotFoundResponse({ description: 'Category not found' })
-  @ApiBadRequestResponse({ description: 'Invalid parameter' })
-  @ApiOperation({ summary: 'Get category by id' })
-  getById(@Param('id', ParseUUIDPipe) id: string) {
+  @ApiGetOne({ model: Category })
+  getCategoryById(@Param('id', ParseUUIDPipe) id: string) {
     return this.categoryService.getCategoryById(id)
   }
 
   @Post()
   @JwtAuthRequired(Role.ADMIN)
-  @ApiCreatedResponse({ type: Category, description: 'Created category' })
-  @ApiConflictResponse({ description: 'Category already exists' })
-  @ApiBadRequestResponse({ description: 'Invalid body' })
-  @ApiOperation({ summary: 'Create new category' })
-  create(@Body() category: CategoryDto) {
+  @ApiCreate({ model: Category, conflict: true })
+  createCategory(@Body() category: CategoryDto) {
     return this.categoryService.createCategory(category)
   }
 
   @Put(':id')
   @JwtAuthRequired(Role.ADMIN)
-  @ApiOkResponse({ type: Category, description: 'Updated category' })
-  @ApiConflictResponse({ description: 'Category already exists' })
-  @ApiNotFoundResponse({ description: 'Category not found' })
-  @ApiBadRequestResponse({ description: 'Invalid body' })
-  @ApiOperation({ summary: 'Update category by id' })
-  update(
+  @ApiUpdate({ model: Category, conflict: true })
+  updateCategory(
     @Param('id', ParseUUIDPipe) id: string,
     @Body() category: CategoryDto,
   ) {
@@ -70,11 +59,8 @@ export class CategoryController {
 
   @Delete(':id')
   @JwtAuthRequired(Role.ADMIN)
-  @ApiOkResponse({ description: 'Category has been deleted' })
-  @ApiNotFoundResponse({ description: 'Category not found' })
-  @ApiBadRequestResponse({ description: 'Invalid parameter' })
-  @ApiOperation({ summary: 'Delete category by id' })
-  delete(@Param('id', ParseUUIDPipe) id: string) {
+  @ApiDelete({ model: Category })
+  deleteCategory(@Param('id', ParseUUIDPipe) id: string) {
     return this.categoryService.deleteCategory(id)
   }
 }

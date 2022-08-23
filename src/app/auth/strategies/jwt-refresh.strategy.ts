@@ -12,7 +12,10 @@ export class JwtRefreshStrategy extends PassportStrategy(
   Strategy,
   'jwt-refresh',
 ) {
-  constructor(private userService: UserService, configService: ConfigService) {
+  constructor(
+    private readonly userService: UserService,
+    readonly configService: ConfigService,
+  ) {
     super({
       ignoreExpiration: false,
       passReqToCallback: true,

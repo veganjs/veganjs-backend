@@ -13,7 +13,7 @@ import { RolesAllowed } from './roles.decorator'
 export function JwtAuthRequired(...roles: Role[]) {
   const defaultDecorators = [
     ApiCookieAuth(),
-    ApiUnauthorizedResponse({ description: 'Invalid credentials' }),
+    ApiUnauthorizedResponse({ description: 'Unauthorized' }),
   ]
 
   if (roles?.length > 0) {

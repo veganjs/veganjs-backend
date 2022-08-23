@@ -15,7 +15,7 @@ import { CategoryEntity } from './entities/category.entity'
 export class CategoryService {
   constructor(
     @InjectRepository(CategoryEntity)
-    private categoryRepository: Repository<CategoryEntity>,
+    private readonly categoryRepository: Repository<CategoryEntity>,
   ) {}
 
   async getAllCategories() {

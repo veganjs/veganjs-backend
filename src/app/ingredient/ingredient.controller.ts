@@ -9,18 +9,15 @@ import {
   Controller,
   ParseUUIDPipe,
 } from '@nestjs/common'
-import {
-  ApiTags,
-  ApiQuery,
-  ApiOperation,
-  ApiOkResponse,
-  ApiCreatedResponse,
-  ApiConflictResponse,
-  ApiNotFoundResponse,
-  ApiBadRequestResponse,
-} from '@nestjs/swagger'
+import { ApiTags } from '@nestjs/swagger'
 
-import { ApiPaginatedResponse } from '~/shared/decorators'
+import {
+  ApiCreate,
+  ApiDelete,
+  ApiGetMany,
+  ApiGetOne,
+  ApiUpdate,
+} from '~/shared/decorators'
 import { PaginationOptions } from '~/shared/types'
 
 import { Role } from '../auth/auth.types'
@@ -34,40 +31,31 @@ export class IngredientController {
   constructor(private readonly ingredientService: IngredientService) {}
 
   @Get()
-  @ApiPaginatedResponse({ model: Ingredient, description: 'Ingredients list' })
-  @ApiOperation({ summary: 'Get all ingredients' })
-  @ApiQuery({ name: 'search', description: 'Search query', required: false })
-  getAll(@Query('search') search: string, @Query() options: PaginationOptions) {
+  @ApiGetMany({ model: Ingredient, paginated: true, search: true })
+  getAllIngredients(
+    @Query('search') search: string,
+    @Query() options: PaginationOptions,
+  ) {
     return this.ingredientService.getAllIngredients(search, options)
   }
 
   @Get(':id')
-  @ApiOkResponse({ type: Ingredient, description: 'Ingredient' })
-  @ApiNotFoundResponse({ description: 'Ingredient not found' })
-  @ApiBadRequestResponse({ description: 'Invalid parameter' })
-  @ApiOperation({ summary: 'Get ingredient by id' })
-  getById(@Param('id', ParseUUIDPipe) id: string) {
+  @ApiGetOne({ model: Ingredient })
+  getIngredientById(@Param('id', ParseUUIDPipe) id: string) {
     return this.ingredientService.getIngredientById(id)
   }
 
   @Post()
   @JwtAuthRequired(Role.ADMIN)
-  @ApiCreatedResponse({ type: Ingredient, description: 'Created ingredient' })
-  @ApiConflictResponse({ description: 'Ingredient already exists' })
-  @ApiBadRequestResponse({ description: 'Invalid body' })
-  @ApiOperation({ summary: 'Create new ingredient' })
-  create(@Body() ingredient: IngredientDto) {
+  @ApiCreate({ model: Ingredient, conflict: true })
+  createIngredient(@Body() ingredient: IngredientDto) {
     return this.ingredientService.createIngredient(ingredient)
   }
 
   @Put(':id')
   @JwtAuthRequired(Role.ADMIN)
-  @ApiOkResponse({ type: Ingredient, description: 'Updated ingredient' })
-  @ApiConflictResponse({ description: 'Ingredient already exists' })
-  @ApiNotFoundResponse({ description: 'Ingredient not found' })
-  @ApiBadRequestResponse({ description: 'Invalid body' })
-  @ApiOperation({ summary: 'Update ingredient by id' })
-  update(
+  @ApiUpdate({ model: Ingredient, conflict: true })
+  updateIngredient(
     @Param('id', ParseUUIDPipe) id: string,
     @Body() ingredient: IngredientDto,
   ) {
@@ -76,11 +64,8 @@ export class IngredientController {
 
   @Delete(':id')
   @JwtAuthRequired(Role.ADMIN)
-  @ApiOkResponse({ description: 'Ingredient has been deleted' })
-  @ApiNotFoundResponse({ description: 'Ingredient not found' })
-  @ApiBadRequestResponse({ description: 'Invalid parameter' })
-  @ApiOperation({ summary: 'Delete ingredient by id' })
-  remove(@Param('id', ParseUUIDPipe) id: string) {
+  @ApiDelete({ model: Ingredient })
+  deleteIngredient(@Param('id', ParseUUIDPipe) id: string) {
     return this.ingredientService.deleteIngredient(id)
   }
 }

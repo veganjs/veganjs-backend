@@ -19,7 +19,7 @@ async function bootstrap() {
   app.setGlobalPrefix('api')
 
   app.useGlobalPipes(new TrimPipe())
-  app.useGlobalPipes(new ValidationPipe({ transform: true }))
+  app.useGlobalPipes(new ValidationPipe({ transform: true, whitelist: true }))
 
   loadPlugins(app)
   setupSwagger(app)

@@ -6,7 +6,7 @@ import { JwtAuthRefreshGuard } from '../guards/jwt-auth-refresh.guard'
 export function JwtAuthRefreshRequired() {
   return applyDecorators(
     UseGuards(JwtAuthRefreshGuard),
-    ApiUnauthorizedResponse({ description: 'Invalid credentials' }),
+    ApiUnauthorizedResponse({ description: 'Unauthorized' }),
     ApiCookieAuth(),
   )
 }

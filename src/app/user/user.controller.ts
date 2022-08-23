@@ -1,5 +1,6 @@
-import { Get, Controller } from '@nestjs/common'
+import { Get, Param, Controller } from '@nestjs/common'
 import { ApiTags, ApiOperation, ApiOkResponse } from '@nestjs/swagger'
+import { ApiGetOne } from '~/shared/decorators'
 
 import { JwtAuthRequired } from '../auth/decorators/jwt-auth.decorator'
 import { GetUser } from './decorators/user.decorator'
@@ -12,11 +13,17 @@ import { UserService } from './user.service'
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
-  @Get('/me')
+  @Get(':id')
+  @ApiGetOne({ model: User, attribute: 'username' })
+  getUserByUsername(@Param('username') username: string) {
+    return this.userService.getUserByUsername(username)
+  }
+
+  @Get('me')
   @JwtAuthRequired()
-  @ApiOkResponse({ type: User, description: 'Current user' })
+  @ApiOkResponse({ type: User, description: 'Current user has been fetched' })
   @ApiOperation({ summary: 'Get current user' })
-  getAll(@GetUser() user: UserEntity) {
+  getMe(@GetUser() user: UserEntity) {
     return user
   }
 }

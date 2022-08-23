@@ -20,7 +20,7 @@ import { IngredientEntity } from './entities/ingredient.entity'
 export class IngredientService {
   constructor(
     @InjectRepository(IngredientEntity)
-    private ingredientRepository: Repository<IngredientEntity>,
+    private readonly ingredientRepository: Repository<IngredientEntity>,
   ) {}
 
   async getAllIngredients(query: string, options: PaginationOptions) {

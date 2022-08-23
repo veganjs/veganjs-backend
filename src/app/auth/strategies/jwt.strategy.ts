@@ -12,8 +12,8 @@ import { JwtPayload } from '../auth.types'
 export class JwtStrategy extends PassportStrategy(Strategy) {
   constructor(
     @InjectRepository(UserEntity)
-    private userRepository: Repository<UserEntity>,
-    configService: ConfigService,
+    private readonly userRepository: Repository<UserEntity>,
+    readonly configService: ConfigService,
   ) {
     super({
       ignoreExpiration: false,

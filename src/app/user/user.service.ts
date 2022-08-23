@@ -16,15 +16,23 @@ import { UserEntity } from './entities/user.entity'
 export class UserService {
   constructor(
     @InjectRepository(UserEntity)
-    private userRepository: Repository<UserEntity>,
+    private readonly userRepository: Repository<UserEntity>,
   ) {}
 
-  async getUserById(id: string) {
-    const result = await this.userRepository.findOne({ where: { id } })
-    if (!result) {
+  private async getUserById(id: string) {
+    const user = await this.userRepository.findOne({ where: { id } })
+    if (!user) {
       throw new NotFoundException()
     }
-    return result
+    return user
+  }
+
+  async getUserByUsername(username: string) {
+    const user = await this.userRepository.findOne({ where: { username } })
+    if (!user) {
+      throw new NotFoundException()
+    }
+    return user
   }
 
   async createUser(credentials: SignUpCredentialsDto) {

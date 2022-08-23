@@ -16,13 +16,13 @@ import { RecipeDto } from './dto/recipe.dto'
 export class RecipeService {
   constructor(
     @InjectRepository(CategoryEntity)
-    private categoryRepository: Repository<CategoryEntity>,
+    private readonly categoryRepository: Repository<CategoryEntity>,
     @InjectRepository(RecipeEntity)
-    private recipeRepository: Repository<RecipeEntity>,
+    private readonly recipeRepository: Repository<RecipeEntity>,
     @InjectRepository(RecipeIngredientEntity)
-    private recipeIngredientRepository: Repository<RecipeIngredientEntity>,
+    private readonly recipeIngredientRepository: Repository<RecipeIngredientEntity>,
     @Inject(IngredientService)
-    private ingredientsService: IngredientService,
+    private readonly ingredientsService: IngredientService,
   ) {}
 
   async getAllRecipes(query: string, options: PaginationOptions) {

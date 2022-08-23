@@ -11,9 +11,9 @@ import { JwtPayload } from './auth.types'
 @Injectable()
 export class AuthService {
   constructor(
-    private configService: ConfigService,
-    private userService: UserService,
-    private jwtService: JwtService,
+    private readonly configService: ConfigService,
+    private readonly userService: UserService,
+    private readonly jwtService: JwtService,
   ) {}
 
   private getJwtAccessTokenCookie(payload: JwtPayload) {

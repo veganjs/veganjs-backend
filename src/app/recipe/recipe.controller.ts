@@ -8,17 +8,14 @@ import {
   Controller,
   ParseUUIDPipe,
 } from '@nestjs/common'
-import {
-  ApiTags,
-  ApiQuery,
-  ApiOperation,
-  ApiOkResponse,
-  ApiCreatedResponse,
-  ApiNotFoundResponse,
-  ApiBadRequestResponse,
-} from '@nestjs/swagger'
+import { ApiTags, ApiNotFoundResponse } from '@nestjs/swagger'
 
-import { ApiPaginatedResponse } from '~/shared/decorators'
+import {
+  ApiCreate,
+  ApiDelete,
+  ApiGetMany,
+  ApiGetOne,
+} from '~/shared/decorators'
 import { PaginationOptions } from '~/shared/types'
 
 import { Role } from '../auth/auth.types'
@@ -33,39 +30,32 @@ export class RecipeController {
   constructor(private readonly recipeService: RecipeService) {}
 
   @Get()
-  @ApiPaginatedResponse({ model: Recipe, description: 'Recipes list' })
-  @ApiOperation({ summary: 'Get all recipes' })
-  @ApiQuery({ name: 'search', description: 'Search query', required: false })
-  getAll(@Query('search') search: string, @Query() options: PaginationOptions) {
+  @ApiGetMany({ model: Recipe, paginated: true, search: true })
+  getAllRecipes(
+    @Query('search') search: string,
+    @Query() options: PaginationOptions,
+  ) {
     return this.recipeService.getAllRecipes(search, options)
   }
 
   @Get(':id')
-  @ApiOkResponse({ type: Recipe, description: 'Recipe' })
-  @ApiNotFoundResponse({ description: 'Recipe not found' })
-  @ApiBadRequestResponse({ description: 'Invalid parameter' })
-  @ApiOperation({ summary: 'Get recipe by id' })
-  findOne(@Param('id', ParseUUIDPipe) id: string) {
+  @ApiGetOne({ model: Recipe })
+  getRecipeById(@Param('id', ParseUUIDPipe) id: string) {
     return this.recipeService.getRecipeById(id)
   }
 
   @Post()
   @JwtAuthRequired(Role.ADMIN)
-  @ApiCreatedResponse({ type: Recipe, description: 'Created recipe' })
-  @ApiBadRequestResponse({ description: 'Invalid body' })
+  @ApiCreate({ model: Recipe })
   @ApiNotFoundResponse({ description: 'Ingredients not found' })
-  @ApiOperation({ summary: 'Create new recipe' })
-  create(@Body() recipe: RecipeDto) {
+  createRecipe(@Body() recipe: RecipeDto) {
     return this.recipeService.createRecipe(recipe)
   }
 
   @Delete(':id')
   @JwtAuthRequired(Role.ADMIN)
-  @ApiOkResponse({ description: 'Recipe has been deleted' })
-  @ApiNotFoundResponse({ description: 'Recipe not found' })
-  @ApiBadRequestResponse({ description: 'Invalid parameter' })
-  @ApiOperation({ summary: 'Delete recipe by id' })
-  remove(@Param('id', ParseUUIDPipe) id: string) {
+  @ApiDelete({ model: Recipe })
+  deleteRecipe(@Param('id', ParseUUIDPipe) id: string) {
     return this.recipeService.deleteRecipe(id)
   }
 }
