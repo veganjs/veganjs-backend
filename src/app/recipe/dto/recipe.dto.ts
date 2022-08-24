@@ -9,6 +9,7 @@ import {
 import { Type } from 'class-transformer'
 import { ApiProperty } from '@nestjs/swagger'
 
+import { User } from '../../user/dto/user.dto'
 import { Category } from '../../category/dto/category.dto'
 import { RecipeIngredient, RecipeIngredientDto } from './recipe-ingredient.dto'
 
@@ -62,4 +63,7 @@ export class Recipe {
 
   @ApiProperty()
   category: Category
+
+  @ApiProperty()
+  author: User
 }

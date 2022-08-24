@@ -18,8 +18,10 @@ import {
 } from '~/shared/decorators'
 import { PaginationOptions } from '~/shared/types'
 
-import { Role } from '../auth/auth.types'
 import { JwtAuthRequired } from '../auth/decorators/jwt-auth.decorator'
+import { GetUser } from '../user/decorators/user.decorator'
+import { UserEntity } from '../user/entities/user.entity'
+import { RecipeOwnerRequired } from './decorators/owner.decorator'
 import { RecipeService } from './recipe.service'
 import { Recipe, RecipeDto } from './dto/recipe.dto'
 
@@ -45,15 +47,15 @@ export class RecipeController {
   }
 
   @Post()
-  @JwtAuthRequired(Role.ADMIN)
+  @JwtAuthRequired()
   @ApiCreate({ model: Recipe })
   @ApiNotFoundResponse({ description: 'Ingredients not found' })
-  createRecipe(@Body() recipe: RecipeDto) {
-    return this.recipeService.createRecipe(recipe)
+  createRecipe(@GetUser() user: UserEntity, @Body() recipe: RecipeDto) {
+    return this.recipeService.createRecipe(recipe, user.id)
   }
 
   @Delete(':id')
-  @JwtAuthRequired(Role.ADMIN)
+  @RecipeOwnerRequired()
   @ApiDelete({ model: Recipe })
   deleteRecipe(@Param('id', ParseUUIDPipe) id: string) {
     return this.recipeService.deleteRecipe(id)

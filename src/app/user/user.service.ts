@@ -19,7 +19,7 @@ export class UserService {
     private readonly userRepository: Repository<UserEntity>,
   ) {}
 
-  private async getUserById(id: string) {
+  async getUserById(id: string) {
     const user = await this.userRepository.findOne({ where: { id } })
     if (!user) {
       throw new NotFoundException()
@@ -71,13 +71,7 @@ export class UserService {
   }
 
   async resetRefreshToken(id: string) {
-    const user = await this.getUserById(id)
-    return this.userRepository.update(
-      { id: user.id },
-      {
-        refreshToken: null,
-      },
-    )
+    return this.userRepository.update({ id }, { refreshToken: null })
   }
 
   async getUserIfRefreshTokenMatches(id: string, refreshToken: string) {

@@ -55,7 +55,7 @@ export class CategoryService {
   async deleteCategory(id: string) {
     const result = await this.categoryRepository.delete(id)
     if (result.affected === 0) {
-      throw new NotFoundException()
+      throw new NotFoundException('Category not found')
     }
   }
 }

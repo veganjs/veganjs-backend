@@ -7,6 +7,7 @@ import { Paginated, PaginationMeta, PaginationOptions } from '~/shared/types'
 import { IngredientService } from '../ingredient/ingredient.service'
 import { IngredientEntity } from '../ingredient/entities/ingredient.entity'
 import { CategoryEntity } from '../category/entities/category.entity'
+import { UserEntity } from '../user/entities/user.entity'
 import { RecipeIngredientEntity } from './entities/recipe-ingredient.entity'
 import { RecipeEntity } from './entities/recipe.entity'
 import { RecipeIngredientDto } from './dto/recipe-ingredient.dto'
@@ -17,12 +18,14 @@ export class RecipeService {
   constructor(
     @InjectRepository(CategoryEntity)
     private readonly categoryRepository: Repository<CategoryEntity>,
+    @InjectRepository(UserEntity)
+    private readonly userRepository: Repository<UserEntity>,
     @InjectRepository(RecipeEntity)
     private readonly recipeRepository: Repository<RecipeEntity>,
     @InjectRepository(RecipeIngredientEntity)
     private readonly recipeIngredientRepository: Repository<RecipeIngredientEntity>,
     @Inject(IngredientService)
-    private readonly ingredientsService: IngredientService,
+    private readonly ingredientService: IngredientService,
   ) {}
 
   async getAllRecipes(query: string, options: PaginationOptions) {
@@ -31,6 +34,8 @@ export class RecipeService {
     queryBuilder
       .skip(options.skip)
       .take(options.limit)
+      .leftJoinAndSelect('recipe.category', 'category')
+      .leftJoinAndSelect('recipe.author', 'author')
       .leftJoinAndSelect('recipe.ingredients', 'ingredients')
       .leftJoinAndSelect('ingredients.ingredient', 'ingredient')
       .orderBy('recipe.title', options.sort)
@@ -89,25 +94,29 @@ export class RecipeService {
     )
   }
 
-  async createRecipe(payload: RecipeDto) {
+  async createRecipe(payload: RecipeDto, userId: string) {
     const recipe = new RecipeEntity()
 
     const ingredientIds = payload.ingredients.map((ingredient) => ingredient.id)
-    const ingredients = await this.ingredientsService.getIngredientsByIds(
+    const ingredients = await this.ingredientService.getIngredientsByIds(
       ingredientIds,
     )
 
     const category = await this.categoryRepository.findOne({
       where: { id: payload.categoryId },
     })
+    const user = await this.userRepository.findOne({
+      where: { id: userId },
+    })
 
     if (!ingredients.length) {
-      throw new NotFoundException()
+      throw new NotFoundException('Ingredients not found')
     }
 
     recipe.title = payload.title
     recipe.description = payload.description
     recipe.category = category ?? null
+    recipe.author = user ?? null
 
     const newRecipe = await this.recipeRepository.save(recipe)
 
@@ -123,7 +132,7 @@ export class RecipeService {
   async deleteRecipe(id: string) {
     const result = await this.recipeRepository.delete(id)
     if (result.affected === 0) {
-      throw new NotFoundException()
+      throw new NotFoundException('Recipe not found')
     }
   }
 }

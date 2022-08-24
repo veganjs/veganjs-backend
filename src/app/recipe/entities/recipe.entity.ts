@@ -3,9 +3,10 @@ import {
   Entity,
   BaseEntity,
   OneToMany,
-  PrimaryGeneratedColumn,
   ManyToOne,
+  PrimaryGeneratedColumn,
 } from 'typeorm'
+import { UserEntity } from '~/app/user/entities/user.entity'
 
 import { CategoryEntity } from '../../category/entities/category.entity'
 import { RecipeIngredientEntity } from './recipe-ingredient.entity'
@@ -25,6 +26,7 @@ export class RecipeEntity extends BaseEntity {
     eager: true,
     nullable: true,
     onDelete: 'SET NULL',
+    onUpdate: 'CASCADE',
   })
   category: CategoryEntity
 
@@ -34,4 +36,12 @@ export class RecipeEntity extends BaseEntity {
     { cascade: true },
   )
   ingredients: RecipeIngredientEntity[]
+
+  @ManyToOne(() => UserEntity, (user) => user.recipes, {
+    eager: true,
+    nullable: true,
+    onDelete: 'SET NULL',
+    onUpdate: 'CASCADE',
+  })
+  author: UserEntity
 }

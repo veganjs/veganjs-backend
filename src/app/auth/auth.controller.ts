@@ -7,6 +7,8 @@ import {
 } from '@nestjs/swagger'
 import { FastifyReply } from 'fastify'
 
+import { ApiCreate } from '~/shared/decorators'
+
 import { User } from '../user/dto/user.dto'
 import { GetUser } from '../user/decorators/user.decorator'
 import { UserEntity } from '../user/entities/user.entity'
@@ -14,14 +16,13 @@ import { AuthService } from './auth.service'
 import { JwtAuthRequired } from './decorators/jwt-auth.decorator'
 import { JwtAuthRefreshRequired } from './decorators/jwt-auth-refresh.decorator'
 import { LoginCredentialsDto, SignUpCredentialsDto } from './dto/auth.dto'
-import { ApiCreate } from '~/shared/decorators'
 
 @ApiTags('auth')
 @Controller()
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
-  @Post('/login')
+  @Post('login')
   @ApiOkResponse({ description: 'Successfully logged in' })
   @ApiUnauthorizedResponse({ description: 'Invalid credentials' })
   @ApiOperation({ summary: 'Sign in' })
@@ -29,13 +30,13 @@ export class AuthController {
     return this.authService.signIn(reply, credentials)
   }
 
-  @Post('/signup')
+  @Post('signup')
   @ApiCreate({ model: User, conflict: true })
   signUp(@Body() credentials: SignUpCredentialsDto) {
     return this.authService.signUp(credentials)
   }
 
-  @Get('/refresh')
+  @Get('refresh')
   @JwtAuthRefreshRequired()
   @ApiOkResponse({ description: 'Access token has been refreshed' })
   @ApiOperation({ summary: 'Refresh access token' })
@@ -43,7 +44,7 @@ export class AuthController {
     return this.authService.refreshToken(reply, user)
   }
 
-  @Get('/logout')
+  @Get('logout')
   @JwtAuthRequired()
   @ApiOkResponse({ description: 'Successfully logged out' })
   @ApiOperation({ summary: 'Log out' })

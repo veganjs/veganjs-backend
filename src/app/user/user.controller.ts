@@ -1,5 +1,6 @@
 import { Get, Param, Controller } from '@nestjs/common'
 import { ApiTags, ApiOperation, ApiOkResponse } from '@nestjs/swagger'
+
 import { ApiGetOne } from '~/shared/decorators'
 
 import { JwtAuthRequired } from '../auth/decorators/jwt-auth.decorator'
@@ -13,7 +14,7 @@ import { UserService } from './user.service'
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
-  @Get(':id')
+  @Get(':username')
   @ApiGetOne({ model: User, attribute: 'username' })
   getUserByUsername(@Param('username') username: string) {
     return this.userService.getUserByUsername(username)

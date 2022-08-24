@@ -88,7 +88,7 @@ export class IngredientService {
   async deleteIngredient(id: string) {
     const result = await this.ingredientRepository.delete(id)
     if (result.affected === 0) {
-      throw new NotFoundException()
+      throw new NotFoundException('Ingredient not found')
     }
   }
 }

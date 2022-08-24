@@ -3,12 +3,14 @@ import {
   Entity,
   BaseEntity,
   BeforeInsert,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm'
 import { Exclude } from 'class-transformer'
 import * as bcrypt from 'bcryptjs'
 
 import { Role } from '../../auth/auth.types'
+import { RecipeEntity } from '../../recipe/entities/recipe.entity'
 
 @Entity()
 export class UserEntity extends BaseEntity {
@@ -40,6 +42,9 @@ export class UserEntity extends BaseEntity {
   })
   @Exclude()
   roles: Role[]
+
+  @OneToMany(() => RecipeEntity, (recipe) => recipe.author)
+  recipes: RecipeEntity[]
 
   @BeforeInsert()
   async hashPassword() {
