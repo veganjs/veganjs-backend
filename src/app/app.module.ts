@@ -6,6 +6,7 @@ import { LoggingInterceptor, TransformInterceptor } from '~/shared/interceptors'
 import { HttpExceptionFilter } from '~/shared/filters'
 
 import { configuration } from '../config/env.config'
+import { validationSchema } from '../config/validation.schema'
 import { DatabaseModule } from '../config/database.module'
 import { CategoryModule } from './category/category.module'
 import { IngredientModule } from './ingredient/ingredient.module'
@@ -19,6 +20,7 @@ import { FileModule } from './file/file.module'
     ConfigModule.forRoot({
       cache: true,
       isGlobal: true,
+      validationSchema,
       load: [configuration],
       envFilePath: `${process.cwd()}/.env.${process.env.NODE_ENV}`,
     }),
