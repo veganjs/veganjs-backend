@@ -9,8 +9,9 @@ import { pipeline } from 'stream'
 import { promisify } from 'util'
 import * as fs from 'fs'
 
+import { staticPath } from '~/config/constants.config'
+
 import { UploadFileOptions } from './file.types'
-import { allowedMimetypes, maxFileSize, publicPath } from './file.constants'
 
 @Injectable()
 export class FileService {
@@ -25,8 +26,10 @@ export class FileService {
 
   async uploadFile(req: FastifyRequest, options: UploadFileOptions) {
     const {
-      destination = publicPath,
-      rename = (oldName) => `${Date.now()}_${oldName}`,
+      destination = staticPath,
+      maxFileSize = 2 * 1024 * 1024, // 2 MB
+      allowedMimetypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'],
+      rename = (fileName) => `${Date.now()}_${fileName}`,
     } = options
     const isMultipart = req.isMultipart()
 

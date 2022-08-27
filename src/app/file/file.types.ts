@@ -1,4 +1,6 @@
 export type UploadFileOptions = {
   destination?: string
-  rename?: (oldName: string) => string
+  allowedMimetypes?: string[]
+  maxFileSize?: number
+  rename?: (fileName: string) => string
 }

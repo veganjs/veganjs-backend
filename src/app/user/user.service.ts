@@ -9,9 +9,9 @@ import { Repository } from 'typeorm'
 import * as bcrypt from 'bcryptjs'
 
 import { PostgresError } from '~/shared/types'
+import { staticPath } from '~/config/constants.config'
 
 import { LoginCredentialsDto, SignUpCredentialsDto } from '../auth/dto/auth.dto'
-import { publicPath } from '../file/file.constants'
 import { FileService } from '../file/file.service'
 import { UserEntity } from './entities/user.entity'
 import { UpdateUserDto } from './dto/user.dto'
@@ -118,7 +118,7 @@ export class UserService {
     } = await this.getUserById(userId)
 
     const filePath = await this.fileService.uploadFile(req, {
-      destination: `${publicPath}/avatars`,
+      destination: `${staticPath}/avatars`,
       rename: (fileName) => `${username}_${Date.now()}_${fileName}`,
     })
 
