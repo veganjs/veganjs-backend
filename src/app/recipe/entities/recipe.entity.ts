@@ -11,6 +11,7 @@ import {
 import { DateISO } from '~/shared/types'
 import { ColumnDateTransformer } from '~/shared/transformers'
 
+import { Time } from '../dto/recipe.dto'
 import { UserEntity } from '../../user/entities/user.entity'
 import { CategoryEntity } from '../../category/entities/category.entity'
 import { RecipeIngredientEntity } from './recipe-ingredient.entity'
@@ -20,17 +21,29 @@ export class RecipeEntity extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string
 
-  @Column()
+  @Column({ length: 100 })
   title: string
 
-  @Column()
+  @Column({ length: 500 })
   description: string
+
+  @Column({ nullable: true })
+  source: string
+
+  @Column()
+  servings: number
+
+  @Column('simple-json', { nullable: true })
+  preparationTime: Time
+
+  @Column('simple-json')
+  cookingTime: Time
 
   @CreateDateColumn({
     type: 'timestamptz',
     transformer: new ColumnDateTransformer(),
   })
-  public createdAt?: DateISO
+  createdAt?: DateISO
 
   @ManyToOne(() => CategoryEntity, (category) => category.recipes, {
     eager: true,

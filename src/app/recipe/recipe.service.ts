@@ -12,6 +12,7 @@ import { RecipeIngredientEntity } from './entities/recipe-ingredient.entity'
 import { RecipeEntity } from './entities/recipe.entity'
 import { RecipeIngredientDto } from './dto/recipe-ingredient.dto'
 import { RecipeDto } from './dto/recipe.dto'
+import { mapCreateRecipe } from './lib/mapRecipe'
 
 @Injectable()
 export class RecipeService {
@@ -95,8 +96,6 @@ export class RecipeService {
   }
 
   async createRecipe(payload: RecipeDto, userId: string) {
-    const recipe = new RecipeEntity()
-
     const ingredientIds = payload.ingredients.map((ingredient) => ingredient.id)
     const ingredients = await this.ingredientService.getIngredientsByIds(
       ingredientIds,
@@ -111,11 +110,7 @@ export class RecipeService {
       throw new NotFoundException('Ingredients not found')
     }
 
-    recipe.title = payload.title
-    recipe.description = payload.description
-    recipe.category = category
-    recipe.author = user
-
+    const recipe = mapCreateRecipe(payload, category, user)
     const newRecipe = await this.recipeRepository.save(recipe)
 
     newRecipe.ingredients = await this.saveRecipeIngredients(

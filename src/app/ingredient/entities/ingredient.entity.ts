@@ -13,7 +13,7 @@ export class IngredientEntity extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string
 
-  @Column({ unique: true })
+  @Column({ length: 40, unique: true })
   name: string
 
   @OneToMany(

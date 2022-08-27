@@ -20,8 +20,8 @@ export class RecipeIngredient {
   id: string
 
   @IsNumber()
-  @Min(0)
-  @ApiProperty({ minimum: 0 })
+  @Min(1)
+  @ApiProperty({ minimum: 1 })
   amount: number
 
   @IsOptional()
@@ -41,8 +41,8 @@ export class RecipeIngredientDto {
   id: string
 
   @IsNumber()
-  @Min(0)
-  @ApiProperty({ minimum: 0 })
+  @Min(1)
+  @ApiProperty({ minimum: 1 })
   amount: number
 
   @IsOptional()
