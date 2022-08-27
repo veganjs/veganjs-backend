@@ -5,18 +5,22 @@ import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core'
 import { LoggingInterceptor, TransformInterceptor } from '~/shared/interceptors'
 import { HttpExceptionFilter } from '~/shared/filters'
 
+import { configuration } from '../config/env.config'
 import { DatabaseModule } from '../config/database.module'
-import { CategoryModule } from '../app/category/category.module'
-import { IngredientModule } from '../app/ingredient/ingredient.module'
-import { RecipeModule } from '../app/recipe/recipe.module'
-import { UserModule } from '../app/user/user.module'
-import { AuthModule } from '../app/auth/auth.module'
+import { CategoryModule } from './category/category.module'
+import { IngredientModule } from './ingredient/ingredient.module'
+import { RecipeModule } from './recipe/recipe.module'
+import { UserModule } from './user/user.module'
+import { AuthModule } from './auth/auth.module'
+import { FileModule } from './file/file.module'
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       cache: true,
       isGlobal: true,
+      load: [configuration],
+      envFilePath: `${process.cwd()}/.env.${process.env.NODE_ENV}`,
     }),
     DatabaseModule,
     CategoryModule,
@@ -24,6 +28,7 @@ import { AuthModule } from '../app/auth/auth.module'
     RecipeModule,
     UserModule,
     AuthModule,
+    FileModule,
   ],
   providers: [
     {

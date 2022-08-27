@@ -1,6 +1,8 @@
 import { NestFastifyApplication } from '@nestjs/platform-fastify'
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger'
 
+import { docPrefix } from './constants.config'
+
 export function setupSwagger(app: NestFastifyApplication) {
   const options = new DocumentBuilder()
     .setTitle('Veganjs cookbook API')
@@ -9,5 +11,5 @@ export function setupSwagger(app: NestFastifyApplication) {
     .build()
 
   const document = SwaggerModule.createDocument(app, options)
-  SwaggerModule.setup('api/swagger', app, document)
+  SwaggerModule.setup(docPrefix, app, document)
 }

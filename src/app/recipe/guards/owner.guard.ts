@@ -1,7 +1,8 @@
 import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common'
 import { Observable } from 'rxjs'
 
-import { Role } from '../../auth/auth.types'
+import { Role } from '~/shared/types'
+
 import { RecipeService } from '../recipe.service'
 
 @Injectable()

@@ -3,10 +3,11 @@ import { ConfigService } from '@nestjs/config'
 import { JwtService } from '@nestjs/jwt'
 import { FastifyReply } from 'fastify'
 
+import { JwtUser } from '~/shared/types'
+
 import { UserEntity } from '../user/entities/user.entity'
 import { UserService } from '../user/user.service'
 import { LoginCredentialsDto, SignUpCredentialsDto } from './dto/auth.dto'
-import { JwtPayload } from './auth.types'
 
 @Injectable()
 export class AuthService {
@@ -16,7 +17,7 @@ export class AuthService {
     private readonly jwtService: JwtService,
   ) {}
 
-  private getJwtAccessTokenCookie(payload: JwtPayload) {
+  private getJwtAccessTokenCookie(payload: JwtUser) {
     const accessTokenExpiration = this.configService.get<string>(
       'ACCESS_TOKEN_EXPIRATION',
     )
@@ -27,7 +28,7 @@ export class AuthService {
     return `Authentication=${accessToken}; HttpOnly; Path=/; Max-Age=${accessTokenExpiration}`
   }
 
-  private getJwtRefreshTokenCookie(payload: JwtPayload) {
+  private getJwtRefreshTokenCookie(payload: JwtUser) {
     const refreshTokenExpiration = this.configService.get<string>(
       'REFRESH_TOKEN_EXPIRATION',
     )
@@ -50,13 +51,14 @@ export class AuthService {
     ]
   }
 
-  private getJwtPayload(user: UserEntity) {
-    const payload: JwtPayload = {
-      id: user.id,
-      roles: user.roles,
-      username: user.username,
-    }
-    return payload
+  private getJwtPayload(payload: UserEntity | JwtUser) {
+    return {
+      id: payload.id,
+      roles: payload.roles,
+      avatar: payload.avatar,
+      username: payload.username,
+      createdAt: payload.createdAt,
+    } as JwtUser
   }
 
   async signIn(reply: FastifyReply, credentials: LoginCredentialsDto) {
@@ -82,13 +84,13 @@ export class AuthService {
     return this.userService.createUser(credentials)
   }
 
-  async refreshToken(reply: FastifyReply, user: UserEntity) {
+  async refreshToken(reply: FastifyReply, user: JwtUser) {
     const payload = this.getJwtPayload(user)
     const accessTokenCookie = this.getJwtAccessTokenCookie(payload)
     reply.header('Set-Cookie', accessTokenCookie)
   }
 
-  async logout(reply: FastifyReply, user: UserEntity) {
+  async logout(reply: FastifyReply, user: JwtUser) {
     const logoutCookie = this.getCookieForLogout()
     await this.userService.resetRefreshToken(user.id)
     reply.header('Set-Cookie', logoutCookie)

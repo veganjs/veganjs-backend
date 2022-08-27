@@ -7,11 +7,11 @@ import {
 } from '@nestjs/swagger'
 import { FastifyReply } from 'fastify'
 
+import { JwtUser } from '~/shared/types'
 import { ApiCreate } from '~/shared/decorators'
 
 import { User } from '../user/dto/user.dto'
 import { GetUser } from '../user/decorators/user.decorator'
-import { UserEntity } from '../user/entities/user.entity'
 import { AuthService } from './auth.service'
 import { JwtAuthRequired } from './decorators/jwt-auth.decorator'
 import { JwtAuthRefreshRequired } from './decorators/jwt-auth-refresh.decorator'
@@ -40,7 +40,7 @@ export class AuthController {
   @JwtAuthRefreshRequired()
   @ApiOkResponse({ description: 'Access token has been refreshed' })
   @ApiOperation({ summary: 'Refresh access token' })
-  refresh(@GetUser() user: UserEntity, @Res() reply: FastifyReply) {
+  refresh(@GetUser() user: JwtUser, @Res() reply: FastifyReply) {
     return this.authService.refreshToken(reply, user)
   }
 
@@ -48,7 +48,7 @@ export class AuthController {
   @JwtAuthRequired()
   @ApiOkResponse({ description: 'Successfully logged out' })
   @ApiOperation({ summary: 'Log out' })
-  logout(@GetUser() user: UserEntity, @Res() reply: FastifyReply) {
+  logout(@GetUser() user: JwtUser, @Res() reply: FastifyReply) {
     return this.authService.logout(reply, user)
   }
 }

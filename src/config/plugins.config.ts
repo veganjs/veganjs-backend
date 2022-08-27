@@ -6,7 +6,10 @@ import fastifyStatic from '@fastify/static'
 import fastifyHelmet from '@fastify/helmet'
 import fastifyRateLimit from '@fastify/rate-limit'
 import fastifyCsrf from '@fastify/csrf-protection'
+import fastifyMultipart from '@fastify/multipart'
 import { join } from 'path'
+
+import { publicPath } from '../app/file/file.constants'
 
 export async function loadPlugins(app: NestFastifyApplication) {
   const configService = app.get(ConfigService)
@@ -16,8 +19,11 @@ export async function loadPlugins(app: NestFastifyApplication) {
     origin: configService.get<string>('CORS_ORIGIN'),
   })
   await app.register(fastifyStatic, {
-    root: join(__dirname, '..', 'public'),
+    root: join(process.cwd(), publicPath),
+    prefix: `/${publicPath}/`,
+    cacheControl: true,
   })
+  await app.register(fastifyMultipart)
   await app.register(fastifyRateLimit, {
     max: 20,
     timeWindow: '1 minute',

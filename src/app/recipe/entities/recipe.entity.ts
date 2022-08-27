@@ -4,10 +4,14 @@ import {
   BaseEntity,
   OneToMany,
   ManyToOne,
+  CreateDateColumn,
   PrimaryGeneratedColumn,
 } from 'typeorm'
-import { UserEntity } from '~/app/user/entities/user.entity'
 
+import { DateISO } from '~/shared/types'
+import { ColumnDateTransformer } from '~/shared/transformers'
+
+import { UserEntity } from '../../user/entities/user.entity'
 import { CategoryEntity } from '../../category/entities/category.entity'
 import { RecipeIngredientEntity } from './recipe-ingredient.entity'
 
@@ -21,6 +25,12 @@ export class RecipeEntity extends BaseEntity {
 
   @Column()
   description: string
+
+  @CreateDateColumn({
+    type: 'timestamptz',
+    transformer: new ColumnDateTransformer(),
+  })
+  public createdAt?: DateISO
 
   @ManyToOne(() => CategoryEntity, (category) => category.recipes, {
     eager: true,

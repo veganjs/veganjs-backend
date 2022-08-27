@@ -2,14 +2,19 @@ import {
   Column,
   Entity,
   BaseEntity,
-  BeforeInsert,
   OneToMany,
+  BeforeInsert,
+  CreateDateColumn,
   PrimaryGeneratedColumn,
+  AfterLoad,
 } from 'typeorm'
+import { ConfigService } from '@nestjs/config'
 import { Exclude } from 'class-transformer'
 import * as bcrypt from 'bcryptjs'
 
-import { Role } from '../../auth/auth.types'
+import { DateISO, Role } from '~/shared/types'
+import { ColumnDateTransformer } from '~/shared/transformers'
+
 import { RecipeEntity } from '../../recipe/entities/recipe.entity'
 
 @Entity()
@@ -43,6 +48,15 @@ export class UserEntity extends BaseEntity {
   @Exclude()
   roles: Role[]
 
+  @Column({ nullable: true })
+  avatar: string
+
+  @CreateDateColumn({
+    type: 'timestamptz',
+    transformer: new ColumnDateTransformer(),
+  })
+  createdAt?: DateISO
+
   @OneToMany(() => RecipeEntity, (recipe) => recipe.author)
   recipes: RecipeEntity[]
 
@@ -50,6 +64,16 @@ export class UserEntity extends BaseEntity {
   async hashPassword() {
     this.salt = await bcrypt.genSalt()
     this.password = await bcrypt.hash(this.password, this.salt)
+  }
+
+  @AfterLoad()
+  setAvatarUrl() {
+    const configService = new ConfigService()
+    const filePath = this.avatar
+
+    this.avatar = `${configService.get<string>(
+      'HOST_NAME',
+    )}:${configService.get<string>('PORT')}/${filePath}`
   }
 
   async validatePassword(password: string) {

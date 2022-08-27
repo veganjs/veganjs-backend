@@ -16,11 +16,10 @@ import {
   ApiGetMany,
   ApiGetOne,
 } from '~/shared/decorators'
-import { PaginationOptions } from '~/shared/types'
+import { JwtUser, PaginationOptions } from '~/shared/types'
 
 import { JwtAuthRequired } from '../auth/decorators/jwt-auth.decorator'
 import { GetUser } from '../user/decorators/user.decorator'
-import { UserEntity } from '../user/entities/user.entity'
 import { RecipeOwnerRequired } from './decorators/owner.decorator'
 import { RecipeService } from './recipe.service'
 import { Recipe, RecipeDto } from './dto/recipe.dto'
@@ -50,8 +49,8 @@ export class RecipeController {
   @JwtAuthRequired()
   @ApiCreate({ model: Recipe })
   @ApiNotFoundResponse({ description: 'Ingredients not found' })
-  createRecipe(@GetUser() user: UserEntity, @Body() recipe: RecipeDto) {
-    return this.recipeService.createRecipe(recipe, user.id)
+  createRecipe(@GetUser() user: JwtUser, @Body() payload: RecipeDto) {
+    return this.recipeService.createRecipe(payload, user.id)
   }
 
   @Delete(':id')

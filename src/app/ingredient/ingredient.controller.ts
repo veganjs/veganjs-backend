@@ -18,9 +18,8 @@ import {
   ApiGetOne,
   ApiUpdate,
 } from '~/shared/decorators'
-import { PaginationOptions } from '~/shared/types'
+import { PaginationOptions, Role } from '~/shared/types'
 
-import { Role } from '../auth/auth.types'
 import { JwtAuthRequired } from '../auth/decorators/jwt-auth.decorator'
 import { Ingredient, IngredientDto } from './dto/ingredient.dto'
 import { IngredientService } from './ingredient.service'
@@ -48,8 +47,8 @@ export class IngredientController {
   @Post()
   @JwtAuthRequired(Role.ADMIN)
   @ApiCreate({ model: Ingredient, conflict: true })
-  createIngredient(@Body() ingredient: IngredientDto) {
-    return this.ingredientService.createIngredient(ingredient)
+  createIngredient(@Body() payload: IngredientDto) {
+    return this.ingredientService.createIngredient(payload)
   }
 
   @Put(':id')
@@ -57,9 +56,9 @@ export class IngredientController {
   @ApiUpdate({ model: Ingredient, conflict: true })
   updateIngredient(
     @Param('id', ParseUUIDPipe) id: string,
-    @Body() ingredient: IngredientDto,
+    @Body() payload: IngredientDto,
   ) {
-    return this.ingredientService.updateIngredient(id, ingredient)
+    return this.ingredientService.updateIngredient(id, payload)
   }
 
   @Delete(':id')

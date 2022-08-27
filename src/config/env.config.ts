@@ -1,0 +1,14 @@
+export const configuration = () => ({
+  NODE_ENV: process.env.NODE_ENV,
+  PORT: parseInt(process.env.PORT, 10) || 8000,
+  HOST_NAME: process.env.HOST_NAME,
+  CORS_ORIGIN: process.env.CORS_ORIGIN,
+  COOKIE_SECRET: process.env.COOKIE_SECRET,
+  ACCESS_TOKEN_SECRET: process.env.ACCESS_TOKEN_SECRET,
+  ACCESS_TOKEN_EXPIRATION: process.env.ACCESS_TOKEN_EXPIRATION,
+  REFRESH_TOKEN_SECRET: process.env.REFRESH_TOKEN_SECRET,
+  REFRESH_TOKEN_EXPIRATION: process.env.REFRESH_TOKEN_EXPIRATION,
+  POSTGRES_HOST: process.env.POSTGRES_HOST,
+  POSTGRES_PORT: process.env.POSTGRES_PORT,
+  POSTGRES_DB: process.env.POSTGRES_DB,
+})

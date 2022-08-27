@@ -23,38 +23,38 @@ export class CategoryService {
   }
 
   async getCategoryById(id: string) {
-    const result = await this.categoryRepository.findOne({ where: { id } })
-    if (!result) {
+    const category = await this.categoryRepository.findOne({ where: { id } })
+    if (!category) {
       throw new NotFoundException()
     }
-    return result
+    return category
   }
 
-  async createCategory(category: CategoryDto) {
+  async createCategory(payload: CategoryDto) {
     try {
-      return await this.categoryRepository.save(category)
+      return await this.categoryRepository.save(payload)
     } catch (error) {
       if (error.code === PostgresError.UniqueViolation) {
-        throw new ConflictException(`Category ${category.name} already exists`)
+        throw new ConflictException(`Category ${payload.name} already exists`)
       }
     }
   }
 
-  async updateCategory(id: string, category: CategoryDto) {
+  async updateCategory(id: string, payload: CategoryDto) {
     try {
-      const result = await this.getCategoryById(id)
-      await this.categoryRepository.update({ id: result.id }, category)
+      const category = await this.getCategoryById(id)
+      await this.categoryRepository.update({ id: category.id }, payload)
       return await this.categoryRepository.findOne({ where: { id } })
     } catch (error) {
       if (error.code === PostgresError.UniqueViolation) {
-        throw new ConflictException(`Category ${category.name} already exists`)
+        throw new ConflictException(`Category ${payload.name} already exists`)
       }
     }
   }
 
   async deleteCategory(id: string) {
-    const result = await this.categoryRepository.delete(id)
-    if (result.affected === 0) {
+    const category = await this.categoryRepository.delete(id)
+    if (category.affected === 0) {
       throw new NotFoundException('Category not found')
     }
   }

@@ -6,8 +6,8 @@ import { Paginated, PaginationMeta, PaginationOptions } from '~/shared/types'
 
 import { IngredientService } from '../ingredient/ingredient.service'
 import { IngredientEntity } from '../ingredient/entities/ingredient.entity'
-import { CategoryEntity } from '../category/entities/category.entity'
-import { UserEntity } from '../user/entities/user.entity'
+import { CategoryService } from '../category/category.service'
+import { UserService } from './../user/user.service'
 import { RecipeIngredientEntity } from './entities/recipe-ingredient.entity'
 import { RecipeEntity } from './entities/recipe.entity'
 import { RecipeIngredientDto } from './dto/recipe-ingredient.dto'
@@ -16,16 +16,16 @@ import { RecipeDto } from './dto/recipe.dto'
 @Injectable()
 export class RecipeService {
   constructor(
-    @InjectRepository(CategoryEntity)
-    private readonly categoryRepository: Repository<CategoryEntity>,
-    @InjectRepository(UserEntity)
-    private readonly userRepository: Repository<UserEntity>,
     @InjectRepository(RecipeEntity)
     private readonly recipeRepository: Repository<RecipeEntity>,
     @InjectRepository(RecipeIngredientEntity)
     private readonly recipeIngredientRepository: Repository<RecipeIngredientEntity>,
     @Inject(IngredientService)
     private readonly ingredientService: IngredientService,
+    @Inject(CategoryService)
+    private readonly categoryService: CategoryService,
+    @Inject(UserService)
+    private readonly userService: UserService,
   ) {}
 
   async getAllRecipes(query: string, options: PaginationOptions) {
@@ -102,12 +102,10 @@ export class RecipeService {
       ingredientIds,
     )
 
-    const category = await this.categoryRepository.findOne({
-      where: { id: payload.categoryId },
-    })
-    const user = await this.userRepository.findOne({
-      where: { id: userId },
-    })
+    const user = await this.userService.getUserById(userId)
+    const category = await this.categoryService.getCategoryById(
+      payload.categoryId,
+    )
 
     if (!ingredients.length) {
       throw new NotFoundException('Ingredients not found')
@@ -115,8 +113,8 @@ export class RecipeService {
 
     recipe.title = payload.title
     recipe.description = payload.description
-    recipe.category = category ?? null
-    recipe.author = user ?? null
+    recipe.category = category
+    recipe.author = user
 
     const newRecipe = await this.recipeRepository.save(recipe)
 
@@ -130,8 +128,8 @@ export class RecipeService {
   }
 
   async deleteRecipe(id: string) {
-    const result = await this.recipeRepository.delete(id)
-    if (result.affected === 0) {
+    const recipe = await this.recipeRepository.delete(id)
+    if (recipe.affected === 0) {
       throw new NotFoundException('Recipe not found')
     }
   }

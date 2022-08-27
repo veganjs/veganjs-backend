@@ -6,6 +6,9 @@ import { IngredientService } from '../ingredient/ingredient.service'
 import { IngredientEntity } from '../ingredient/entities/ingredient.entity'
 import { CategoryEntity } from '../category/entities/category.entity'
 import { UserEntity } from '../user/entities/user.entity'
+import { CategoryService } from './../category/category.service'
+import { UserService } from '../user/user.service'
+import { FileService } from '../file/file.service'
 import { RecipeEntity } from './entities/recipe.entity'
 import { RecipeIngredientEntity } from './entities/recipe-ingredient.entity'
 import { RecipeController } from './recipe.controller'
@@ -23,6 +26,12 @@ import { RecipeService } from './recipe.service'
     AuthModule,
   ],
   controllers: [RecipeController],
-  providers: [RecipeService, IngredientService],
+  providers: [
+    RecipeService,
+    IngredientService,
+    CategoryService,
+    UserService,
+    FileService,
+  ],
 })
 export class RecipeModule {}

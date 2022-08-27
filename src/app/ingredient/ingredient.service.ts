@@ -52,42 +52,42 @@ export class IngredientService {
   }
 
   async getIngredientById(id: string) {
-    const result = await this.ingredientRepository.findOne({ where: { id } })
-    if (!result) {
+    const ingredient = await this.ingredientRepository.findOne({
+      where: { id },
+    })
+    if (!ingredient) {
       throw new NotFoundException()
     }
-    return result
+    return ingredient
   }
 
-  async createIngredient(ingredient: IngredientDto) {
+  async createIngredient(payload: IngredientDto) {
     try {
-      return await this.ingredientRepository.save(ingredient)
+      return await this.ingredientRepository.save(payload)
     } catch (error) {
       if (error.code === PostgresError.UniqueViolation) {
-        throw new ConflictException(
-          `Ingredient ${ingredient.name} already exists`,
-        )
+        throw new ConflictException(`Ingredient ${payload.name} already exists`)
       }
     }
   }
 
-  async updateIngredient(id: string, ingredient: IngredientDto) {
+  async updateIngredient(id: string, payload: IngredientDto) {
     try {
-      const result = await this.getIngredientById(id)
-      await this.ingredientRepository.update({ id: result.id }, ingredient)
-      return await this.ingredientRepository.findOne({ where: { id } })
+      const ingredient = await this.getIngredientById(id)
+      await this.ingredientRepository.update({ id: ingredient.id }, payload)
+      return await this.ingredientRepository.findOne({
+        where: { id: ingredient.id },
+      })
     } catch (error) {
       if (error.code === PostgresError.UniqueViolation) {
-        throw new ConflictException(
-          `Ingredient ${ingredient.name} already exists`,
-        )
+        throw new ConflictException(`Ingredient ${payload.name} already exists`)
       }
     }
   }
 
   async deleteIngredient(id: string) {
-    const result = await this.ingredientRepository.delete(id)
-    if (result.affected === 0) {
+    const ingredient = await this.ingredientRepository.delete(id)
+    if (ingredient.affected === 0) {
       throw new NotFoundException('Ingredient not found')
     }
   }

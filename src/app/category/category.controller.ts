@@ -17,8 +17,8 @@ import {
   ApiUpdate,
   ApiDelete,
 } from '~/shared/decorators'
+import { Role } from '~/shared/types'
 
-import { Role } from '../auth/auth.types'
 import { JwtAuthRequired } from '../auth/decorators/jwt-auth.decorator'
 import { Category, CategoryDto } from './dto/category.dto'
 import { CategoryService } from './category.service'
@@ -43,8 +43,8 @@ export class CategoryController {
   @Post()
   @JwtAuthRequired(Role.ADMIN)
   @ApiCreate({ model: Category, conflict: true })
-  createCategory(@Body() category: CategoryDto) {
-    return this.categoryService.createCategory(category)
+  createCategory(@Body() payload: CategoryDto) {
+    return this.categoryService.createCategory(payload)
   }
 
   @Put(':id')
@@ -52,9 +52,9 @@ export class CategoryController {
   @ApiUpdate({ model: Category, conflict: true })
   updateCategory(
     @Param('id', ParseUUIDPipe) id: string,
-    @Body() category: CategoryDto,
+    @Body() payload: CategoryDto,
   ) {
-    return this.categoryService.updateCategory(id, category)
+    return this.categoryService.updateCategory(id, payload)
   }
 
   @Delete(':id')
