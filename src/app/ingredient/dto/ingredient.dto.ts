@@ -8,13 +8,8 @@ export class IngredientDto {
   name: string
 }
 
-export class Ingredient {
+export class Ingredient extends IngredientDto {
   @IsUUID()
   @ApiProperty({ format: 'uuid' })
   id: string
-
-  @IsNotEmpty()
-  @IsString()
-  @ApiProperty()
-  name: string
 }

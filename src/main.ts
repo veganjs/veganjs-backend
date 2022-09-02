@@ -27,6 +27,11 @@ async function bootstrap() {
   app.setGlobalPrefix(apiPrefix)
 
   app.useGlobalPipes(new TrimPipe())
+
+  /**
+   * whitelist: removes all properties of a request’s body which are not in the DTO
+   * transform: allows us to transform properties, i.e., an integer to a string
+   */
   app.useGlobalPipes(new ValidationPipe({ transform: true, whitelist: true }))
 
   loadPlugins(app)
