@@ -71,9 +71,11 @@ export class UserEntity extends BaseEntity {
     const configService = new ConfigService()
     const filePath = this.avatar
 
-    this.avatar = `${configService.get<string>(
-      'HOST_NAME',
-    )}:${configService.get<string>('PORT')}/${filePath}`
+    if (filePath) {
+      this.avatar = `${configService.get<string>(
+        'HOST_NAME',
+      )}:${configService.get<string>('PORT')}/${filePath}`
+    }
   }
 
   async validatePassword(password: string) {

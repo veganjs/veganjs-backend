@@ -56,7 +56,7 @@ export class IngredientService {
       where: { id },
     })
     if (!ingredient) {
-      throw new NotFoundException()
+      throw new NotFoundException('Ingredient not found')
     }
     return ingredient
   }

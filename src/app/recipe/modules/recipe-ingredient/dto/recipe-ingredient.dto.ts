@@ -9,8 +9,8 @@ import {
 } from 'class-validator'
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger'
 
-import { MeasureUnit } from '../recipe.types'
-import { Ingredient } from './../../ingredient/dto/ingredient.dto'
+import { MeasureUnit } from '../../../recipe.types'
+import { Ingredient } from '../../../../ingredient/dto/ingredient.dto'
 
 export class RecipeIngredient {
   @IsUUID()

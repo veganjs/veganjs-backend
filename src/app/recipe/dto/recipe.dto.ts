@@ -1,9 +1,7 @@
 import {
   Min,
-  Max,
   IsUrl,
   IsUUID,
-  IsEnum,
   IsArray,
   IsNumber,
   IsString,
@@ -11,36 +9,30 @@ import {
   IsOptional,
   ArrayNotEmpty,
   ValidateNested,
+  MaxLength,
+  ArrayMinSize,
 } from 'class-validator'
 import { Type } from 'class-transformer'
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger'
 
 import { User } from '../../user/dto/user.dto'
 import { Category } from '../../category/dto/category.dto'
-import { RecipeIngredient, RecipeIngredientDto } from './recipe-ingredient.dto'
-import { TimeUnit } from '../recipe.types'
-
-export class Time {
-  @IsNumber()
-  @Min(1)
-  @Max(60)
-  @ApiProperty({ minimum: 1, maximum: 60 })
-  amount: number
-
-  @IsNotEmpty()
-  @IsEnum(TimeUnit)
-  @ApiProperty({ enum: TimeUnit })
-  unit: TimeUnit
-}
+import {
+  RecipeIngredient,
+  RecipeIngredientDto,
+} from '../modules/recipe-ingredient/dto/recipe-ingredient.dto'
+import { Step, StepDto } from '../modules/step/dto/step.dto'
 
 class RecipeCommon {
   @IsNotEmpty()
   @IsString()
+  @MaxLength(100)
   @ApiProperty()
   title: string
 
   @IsNotEmpty()
   @IsString()
+  @MaxLength(500)
   @ApiProperty()
   description: string
 
@@ -48,17 +40,6 @@ class RecipeCommon {
   @Min(1)
   @ApiProperty({ minimum: 1 })
   servings: number
-
-  @ValidateNested()
-  @Type(() => Time)
-  @IsOptional()
-  @ApiPropertyOptional()
-  preparationTime: Time
-
-  @ValidateNested()
-  @Type(() => Time)
-  @ApiProperty()
-  cookingTime: Time
 
   @IsNotEmpty()
   @IsString()
@@ -75,6 +56,7 @@ export class RecipeDto extends RecipeCommon {
 
   @IsArray()
   @ArrayNotEmpty()
+  @ArrayMinSize(1)
   @ApiProperty({
     isArray: true,
     type: RecipeIngredientDto,
@@ -82,6 +64,17 @@ export class RecipeDto extends RecipeCommon {
   @ValidateNested({ each: true })
   @Type(() => RecipeIngredientDto)
   ingredients: RecipeIngredientDto[]
+
+  @IsArray()
+  @ArrayNotEmpty()
+  @ArrayMinSize(1)
+  @ApiProperty({
+    isArray: true,
+    type: StepDto,
+  })
+  @ValidateNested({ each: true })
+  @Type(() => StepDto)
+  steps: StepDto[]
 }
 
 export class Recipe extends RecipeCommon {
@@ -90,11 +83,26 @@ export class Recipe extends RecipeCommon {
   id: string
 
   @IsArray()
+  @ArrayNotEmpty()
+  @ArrayMinSize(1)
   @ApiProperty({
     isArray: true,
     type: RecipeIngredient,
   })
+  @ValidateNested({ each: true })
+  @Type(() => RecipeIngredient)
   ingredients: RecipeIngredient[]
+
+  @IsArray()
+  @ArrayNotEmpty()
+  @ArrayMinSize(1)
+  @ApiProperty({
+    isArray: true,
+    type: Step,
+  })
+  @ValidateNested({ each: true })
+  @Type(() => Step)
+  steps: Step[]
 
   @ApiProperty()
   category: Category

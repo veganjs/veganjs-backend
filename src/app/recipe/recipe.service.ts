@@ -5,28 +5,28 @@ import { Repository } from 'typeorm'
 import { Paginated, PaginationMeta, PaginationOptions } from '~/shared/types'
 
 import { IngredientService } from '../ingredient/ingredient.service'
-import { IngredientEntity } from '../ingredient/entities/ingredient.entity'
 import { CategoryService } from '../category/category.service'
 import { UserService } from './../user/user.service'
-import { RecipeIngredientEntity } from './entities/recipe-ingredient.entity'
 import { RecipeEntity } from './entities/recipe.entity'
-import { RecipeIngredientDto } from './dto/recipe-ingredient.dto'
+import { RecipeIngredientService } from './modules/recipe-ingredient/recipe-ingredient.service'
+import { StepService } from './modules/step/step.service'
 import { RecipeDto } from './dto/recipe.dto'
-import { mapCreateRecipe } from './lib/mapRecipe'
 
 @Injectable()
 export class RecipeService {
   constructor(
     @InjectRepository(RecipeEntity)
     private readonly recipeRepository: Repository<RecipeEntity>,
-    @InjectRepository(RecipeIngredientEntity)
-    private readonly recipeIngredientRepository: Repository<RecipeIngredientEntity>,
     @Inject(IngredientService)
     private readonly ingredientService: IngredientService,
+    @Inject(RecipeIngredientService)
+    private readonly recipeIngredientService: RecipeIngredientService,
     @Inject(CategoryService)
     private readonly categoryService: CategoryService,
     @Inject(UserService)
     private readonly userService: UserService,
+    @Inject(StepService)
+    private readonly stepService: StepService,
   ) {}
 
   async getAllRecipes(query: string, options: PaginationOptions) {
@@ -37,6 +37,7 @@ export class RecipeService {
       .take(options.limit)
       .leftJoinAndSelect('recipe.category', 'category')
       .leftJoinAndSelect('recipe.author', 'author')
+      .leftJoinAndSelect('recipe.steps', 'steps')
       .leftJoinAndSelect('recipe.ingredients', 'ingredients')
       .leftJoinAndSelect('ingredients.ingredient', 'ingredient')
       .orderBy('recipe.title', options.sort)
@@ -61,40 +62,6 @@ export class RecipeService {
     })
   }
 
-  private async saveRecipeIngredient(
-    ingredientPayload: RecipeIngredientDto,
-    ingredient: IngredientEntity,
-    recipeId: string,
-  ) {
-    const recipeIngredient = new RecipeIngredientEntity()
-
-    recipeIngredient.recipeId = recipeId
-    recipeIngredient.amount = ingredientPayload.amount
-    recipeIngredient.unit = ingredientPayload.unit
-    recipeIngredient.ingredient = ingredient
-
-    return await this.recipeIngredientRepository.save(recipeIngredient)
-  }
-
-  private async saveRecipeIngredients(
-    ingredientsPayload: RecipeIngredientDto[],
-    ingredients: IngredientEntity[],
-    recipeId: string,
-  ) {
-    return Promise.all(
-      ingredients.map((ingredient) => {
-        const ingredientPayload = ingredientsPayload.find(
-          (payload) => ingredient.id === payload.id,
-        )
-        return this.saveRecipeIngredient(
-          ingredientPayload,
-          ingredient,
-          recipeId,
-        )
-      }),
-    )
-  }
-
   async createRecipe(payload: RecipeDto, userId: string) {
     const ingredientIds = payload.ingredients.map((ingredient) => ingredient.id)
     const ingredients = await this.ingredientService.getIngredientsByIds(
@@ -110,12 +77,26 @@ export class RecipeService {
       throw new NotFoundException('Ingredients not found')
     }
 
-    const recipe = mapCreateRecipe(payload, category, user)
+    const recipe = new RecipeEntity()
+
+    recipe.title = payload.title
+    recipe.description = payload.description
+    recipe.source = payload.source
+    recipe.servings = payload.servings
+    recipe.category = category
+    recipe.author = user
+
     const newRecipe = await this.recipeRepository.save(recipe)
 
-    newRecipe.ingredients = await this.saveRecipeIngredients(
-      payload.ingredients,
-      ingredients,
+    newRecipe.ingredients =
+      await this.recipeIngredientService.createRecipeIngredients(
+        payload.ingredients,
+        ingredients,
+        newRecipe.id,
+      )
+
+    newRecipe.steps = await this.stepService.createSteps(
+      payload.steps,
       newRecipe.id,
     )
 

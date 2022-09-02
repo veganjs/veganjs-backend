@@ -11,10 +11,10 @@ import {
 import { DateISO } from '~/shared/types'
 import { ColumnDateTransformer } from '~/shared/transformers'
 
-import { Time } from '../dto/recipe.dto'
 import { UserEntity } from '../../user/entities/user.entity'
 import { CategoryEntity } from '../../category/entities/category.entity'
-import { RecipeIngredientEntity } from './recipe-ingredient.entity'
+import { StepEntity } from '../modules/step/entities/step.entity'
+import { RecipeIngredientEntity } from '../modules/recipe-ingredient/entities/recipe-ingredient.entity'
 
 @Entity()
 export class RecipeEntity extends BaseEntity {
@@ -32,12 +32,6 @@ export class RecipeEntity extends BaseEntity {
 
   @Column()
   servings: number
-
-  @Column('simple-json', { nullable: true })
-  preparationTime: Time
-
-  @Column('simple-json')
-  cookingTime: Time
 
   @CreateDateColumn({
     type: 'timestamptz',
@@ -59,6 +53,9 @@ export class RecipeEntity extends BaseEntity {
     { cascade: true },
   )
   ingredients: RecipeIngredientEntity[]
+
+  @OneToMany(() => StepEntity, (step) => step.recipe, { cascade: true })
+  steps: StepEntity[]
 
   @ManyToOne(() => UserEntity, (user) => user.recipes, {
     eager: true,

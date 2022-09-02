@@ -9,8 +9,11 @@ import { UserEntity } from '../user/entities/user.entity'
 import { CategoryService } from './../category/category.service'
 import { UserService } from '../user/user.service'
 import { FileService } from '../file/file.service'
+import { RecipeIngredientService } from './modules/recipe-ingredient/recipe-ingredient.service'
+import { RecipeIngredientEntity } from './modules/recipe-ingredient/entities/recipe-ingredient.entity'
+import { StepEntity } from './modules/step/entities/step.entity'
+import { StepService } from './modules/step/step.service'
 import { RecipeEntity } from './entities/recipe.entity'
-import { RecipeIngredientEntity } from './entities/recipe-ingredient.entity'
 import { RecipeController } from './recipe.controller'
 import { RecipeService } from './recipe.service'
 
@@ -22,6 +25,7 @@ import { RecipeService } from './recipe.service'
       CategoryEntity,
       IngredientEntity,
       RecipeIngredientEntity,
+      StepEntity,
     ]),
     AuthModule,
   ],
@@ -29,9 +33,11 @@ import { RecipeService } from './recipe.service'
   providers: [
     RecipeService,
     IngredientService,
+    RecipeIngredientService,
     CategoryService,
     UserService,
     FileService,
+    StepService,
   ],
 })
 export class RecipeModule {}

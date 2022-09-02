@@ -9,9 +9,10 @@ import {
 import { Exclude } from 'class-transformer'
 
 import { ColumnNumericTransformer } from '~/shared/transformers'
-import { IngredientEntity } from '../../ingredient/entities/ingredient.entity'
-import { RecipeEntity } from './recipe.entity'
-import { MeasureUnit } from '../recipe.types'
+
+import { IngredientEntity } from '../../../../ingredient/entities/ingredient.entity'
+import { RecipeEntity } from '../../../entities/recipe.entity'
+import { MeasureUnit } from '../../../recipe.types'
 
 @Entity()
 export class RecipeIngredientEntity extends BaseEntity {

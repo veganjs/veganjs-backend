@@ -9,8 +9,3 @@ export enum MeasureUnit {
   Piece = 'piece',
   Pack = 'pack',
 }
-
-export enum TimeUnit {
-  Hour = 'hour',
-  Min = 'min',
-}

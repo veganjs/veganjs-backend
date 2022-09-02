@@ -6,7 +6,7 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm'
 
-import { RecipeIngredientEntity } from '../../recipe/entities/recipe-ingredient.entity'
+import { RecipeIngredientEntity } from '../../recipe/modules/recipe-ingredient/entities/recipe-ingredient.entity'
 
 @Entity()
 export class IngredientEntity extends BaseEntity {

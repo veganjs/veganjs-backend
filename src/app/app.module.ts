@@ -10,6 +10,8 @@ import { validationSchema } from '../config/validation.schema'
 import { DatabaseModule } from '../config/database.module'
 import { CategoryModule } from './category/category.module'
 import { IngredientModule } from './ingredient/ingredient.module'
+import { StepsModule } from './recipe/modules/step/step.module'
+import { RecipeIngredientModule } from './recipe/modules/recipe-ingredient/recipe-ingredient.module'
 import { RecipeModule } from './recipe/recipe.module'
 import { UserModule } from './user/user.module'
 import { AuthModule } from './auth/auth.module'
@@ -28,9 +30,11 @@ import { FileModule } from './file/file.module'
     CategoryModule,
     IngredientModule,
     RecipeModule,
+    RecipeIngredientModule,
     UserModule,
     AuthModule,
     FileModule,
+    StepsModule,
   ],
   providers: [
     {
