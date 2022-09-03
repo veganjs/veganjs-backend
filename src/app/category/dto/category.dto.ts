@@ -6,17 +6,12 @@ import { CategoryTopic } from '../category.types'
 export class CategoryDto {
   @IsNotEmpty()
   @IsEnum(CategoryTopic)
-  @ApiProperty({ enum: CategoryTopic })
+  @ApiProperty({ description: 'Category name', enum: CategoryTopic })
   name: CategoryTopic
 }
 
-export class Category {
+export class Category extends CategoryDto {
   @IsUUID()
-  @ApiProperty({ format: 'uuid' })
+  @ApiProperty({ description: 'Category id', format: 'uuid' })
   id: string
-
-  @IsNotEmpty()
-  @IsEnum(CategoryTopic)
-  @ApiProperty({ enum: CategoryTopic })
-  name: CategoryTopic
 }

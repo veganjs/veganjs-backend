@@ -4,18 +4,18 @@ import { IsNotEmpty, IsString, IsISO8601, IsOptional } from 'class-validator'
 export class User {
   @IsNotEmpty()
   @IsString()
-  @ApiProperty()
+  @ApiProperty({ description: 'User name' })
   username: string
 
   @IsNotEmpty()
   @IsString()
   @IsOptional()
-  @ApiPropertyOptional()
+  @ApiPropertyOptional({ description: 'User avatar' })
   avatar?: string
 
   @IsNotEmpty()
   @IsISO8601()
-  @ApiProperty()
+  @ApiProperty({ description: 'User account creation date' })
   createdAt: string
 }
 
@@ -23,7 +23,7 @@ export class UpdateProfileDto {
   @IsNotEmpty()
   @IsString()
   @IsOptional()
-  @ApiProperty()
+  @ApiProperty({ description: 'User name' })
   username?: string
 }
 
@@ -31,6 +31,6 @@ export class UpdateUserDto extends UpdateProfileDto {
   @IsNotEmpty()
   @IsString()
   @IsOptional()
-  @ApiPropertyOptional()
+  @ApiPropertyOptional({ description: 'User avatar' })
   avatar?: string
 }

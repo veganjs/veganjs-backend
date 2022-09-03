@@ -12,18 +12,18 @@ export class StepDto {
   @IsString()
   @IsNotEmpty()
   @MaxLength(500)
-  @ApiProperty()
+  @ApiProperty({ description: 'Step description' })
   description: string
 }
 
 export class Step extends StepDto {
   @IsUUID()
-  @ApiProperty({ format: 'uuid' })
+  @ApiProperty({ description: 'Step id', format: 'uuid' })
   id: string
 
   @IsNumber()
   @Min(1)
   @IsNotEmpty()
-  @ApiProperty()
+  @ApiProperty({ description: 'Step order number' })
   order: number
 }

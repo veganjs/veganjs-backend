@@ -10,12 +10,12 @@ import {
 export class LoginCredentialsDto {
   @IsString()
   @IsNotEmpty()
-  @ApiProperty()
+  @ApiProperty({ description: 'User name' })
   username: string
 
   @IsString()
   @IsNotEmpty()
-  @ApiProperty()
+  @ApiProperty({ description: 'User password' })
   password: string
 }
 
@@ -24,7 +24,7 @@ export class SignUpCredentialsDto {
   @IsNotEmpty()
   @MinLength(4)
   @MaxLength(20)
-  @ApiProperty()
+  @ApiProperty({ description: 'User name' })
   username: string
 
   @IsString()
@@ -34,6 +34,6 @@ export class SignUpCredentialsDto {
   @Matches(/((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/, {
     message: 'password is too weak',
   })
-  @ApiProperty()
+  @ApiProperty({ description: 'User password' })
   password: string
 }

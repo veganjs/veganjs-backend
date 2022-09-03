@@ -18,7 +18,7 @@ import { JwtAuthRefreshRequired } from './decorators/jwt-auth-refresh.decorator'
 import { LoginCredentialsDto, SignUpCredentialsDto } from './dto/auth.dto'
 
 @ApiTags('auth')
-@Controller()
+@Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 

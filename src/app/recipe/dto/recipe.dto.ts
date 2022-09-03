@@ -17,41 +17,44 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger'
 
 import { User } from '../../user/dto/user.dto'
 import { Category } from '../../category/dto/category.dto'
+import { Step, StepDto } from '../modules/step/dto/step.dto'
 import {
   RecipeIngredient,
   RecipeIngredientDto,
 } from '../modules/recipe-ingredient/dto/recipe-ingredient.dto'
-import { Step, StepDto } from '../modules/step/dto/step.dto'
 
 class RecipeCommon {
   @IsNotEmpty()
   @IsString()
   @MaxLength(100)
-  @ApiProperty()
+  @ApiProperty({ description: 'Recipe title' })
   title: string
 
   @IsNotEmpty()
   @IsString()
   @MaxLength(500)
-  @ApiProperty()
+  @ApiProperty({ description: 'Recipe description' })
   description: string
 
   @IsNumber()
   @Min(1)
-  @ApiProperty({ minimum: 1 })
+  @ApiProperty({
+    minimum: 1,
+    description: 'Number of servings a recipe will make',
+  })
   servings: number
 
   @IsNotEmpty()
   @IsString()
   @IsUrl()
   @IsOptional()
-  @ApiPropertyOptional()
+  @ApiPropertyOptional({ description: 'Recipe original source' })
   source: string
 }
 
 export class RecipeDto extends RecipeCommon {
   @IsUUID()
-  @ApiProperty()
+  @ApiProperty({ description: 'Category id' })
   categoryId: string
 
   @IsArray()
@@ -79,7 +82,7 @@ export class RecipeDto extends RecipeCommon {
 
 export class Recipe extends RecipeCommon {
   @IsUUID()
-  @ApiProperty({ format: 'uuid' })
+  @ApiProperty({ format: 'uuid', description: 'Recipe id' })
   id: string
 
   @IsArray()
@@ -104,9 +107,9 @@ export class Recipe extends RecipeCommon {
   @Type(() => Step)
   steps: Step[]
 
-  @ApiProperty()
+  @ApiProperty({ type: Category })
   category: Category
 
-  @ApiProperty()
+  @ApiProperty({ type: User })
   author: User
 }

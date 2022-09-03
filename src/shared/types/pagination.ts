@@ -5,31 +5,36 @@ import { Type } from 'class-transformer'
 import { Sort } from './sort'
 
 export class PaginationOptions {
-  @ApiPropertyOptional({ enum: Sort, default: Sort.ASC })
   @IsEnum(Sort)
   @IsOptional()
+  @ApiPropertyOptional({
+    enum: Sort,
+    default: Sort.ASC,
+    description: 'Sort order',
+  })
   readonly sort?: Sort = Sort.ASC
 
-  @ApiPropertyOptional({
-    minimum: 1,
-    default: 1,
-  })
   @Type(() => Number)
   @IsInt()
   @Min(1)
   @IsOptional()
-  readonly page?: number = 1
-
   @ApiPropertyOptional({
     minimum: 1,
-    maximum: 50,
-    default: 10,
+    default: 1,
+    description: 'Current page',
   })
+  readonly page?: number = 1
+
   @Type(() => Number)
   @IsInt()
   @Min(1)
   @Max(50)
   @IsOptional()
+  @ApiPropertyOptional({
+    minimum: 1,
+    default: 20,
+    description: 'Records per page',
+  })
   readonly limit?: number = 20
 
   get skip(): number {
@@ -43,22 +48,26 @@ interface PaginationMetaParams {
 }
 
 export class PaginationMeta {
-  @ApiProperty()
+  @ApiProperty({ minimum: 1, default: 1, description: 'Current page' })
   readonly page: number
 
-  @ApiProperty()
+  @ApiProperty({ minimum: 1, default: 20, description: 'Records per page' })
   readonly limit: number
 
-  @ApiProperty()
+  @ApiProperty({ description: 'Total records count' })
   readonly totalCount: number
 
-  @ApiProperty()
+  @ApiProperty({ description: 'Total pages count' })
   readonly pagesCount: number
 
-  @ApiProperty()
+  @ApiProperty({
+    description: 'Whether current entity has a previous page to be shown',
+  })
   readonly hasPreviousPage: boolean
 
-  @ApiProperty()
+  @ApiProperty({
+    description: 'Whether current entity has a next page to be shown',
+  })
   readonly hasNextPage: boolean
 
   constructor({ options, totalCount }: PaginationMetaParams) {
@@ -73,10 +82,10 @@ export class PaginationMeta {
 
 export class Paginated<T> {
   @IsArray()
-  @ApiProperty({ isArray: true })
+  @ApiProperty({ isArray: true, description: 'Paginated data' })
   readonly data: T[]
 
-  @ApiProperty({ type: () => PaginationMeta })
+  @ApiProperty({ type: PaginationMeta })
   readonly meta: PaginationMeta
 
   constructor(data: T[], meta: PaginationMeta) {
