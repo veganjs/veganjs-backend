@@ -35,7 +35,10 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe({ transform: true, whitelist: true }))
 
   loadPlugins(app)
-  setupSwagger(app)
+
+  if (configService.get<string>('NODE_ENV') === 'development') {
+    setupSwagger(app)
+  }
 
   await app.listen(port)
 
