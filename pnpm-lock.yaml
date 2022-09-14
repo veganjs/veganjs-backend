@@ -18,7 +18,7 @@ specifiers:
   '@nestjs/schematics': ^9.0.0
   '@nestjs/swagger': ^6.0.1
   '@nestjs/testing': ^9.0.0
-  '@nestjs/typeorm': ^9.0.0
+  '@nestjs/typeorm': 9.0.0-next.2
   '@types/bcryptjs': ^2.4.2
   '@types/jest': 28.1.4
   '@types/node': ^16.0.0
@@ -69,7 +69,7 @@ dependencies:
   '@nestjs/passport': 9.0.0_oiyyv4gjloak37yd3yig7yoro4
   '@nestjs/platform-fastify': 9.0.1_72vqfas4wsjuaij2jaktotmdwq
   '@nestjs/swagger': 6.0.1_apamxrkrbaupfyo4hvxcjq2j6q
-  '@nestjs/typeorm': 9.0.0_abb33aogac2ku4b7geqnl6bo6i
+  '@nestjs/typeorm': 9.0.0-next.2_abb33aogac2ku4b7geqnl6bo6i
   bcryptjs: 2.4.3
   class-transformer: 0.5.1
   class-validator: 0.13.2
@@ -1165,11 +1165,11 @@ packages:
       tslib: 2.4.0
     dev: true
 
-  /@nestjs/typeorm/9.0.0_abb33aogac2ku4b7geqnl6bo6i:
-    resolution: {integrity: sha512-pTH9ZlngObaPlt7//CY2lSb+3ouFczUQJln1ctXIpGwZdY3QBrwsxF3hnJXsCYNa+IPfz27qJUeoAQmp65kGZw==}
+  /@nestjs/typeorm/9.0.0-next.2_abb33aogac2ku4b7geqnl6bo6i:
+    resolution: {integrity: sha512-2sb4fHH21SBCOrwvv9hyamUCgAc23eXA+/uyAeu7/VhOUnce8Iw7apNJQKK5PxbBWOCC4vXoIc5P8sDML5yNGA==}
     peerDependencies:
-      '@nestjs/common': ^8.0.0 || ^9.0.0
-      '@nestjs/core': ^8.0.0 || ^9.0.0
+      '@nestjs/common': ^8.0.0
+      '@nestjs/core': ^8.0.0
       reflect-metadata: ^0.1.13
       rxjs: ^7.2.0
       typeorm: ^0.3.0

@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common'
+import { InjectRepository } from '@nestjs/typeorm'
 import { ConfigService } from '@nestjs/config'
 import { PassportStrategy } from '@nestjs/passport'
 import { Strategy, ExtractJwt } from 'passport-jwt'
@@ -6,7 +7,7 @@ import { FastifyRequest } from 'fastify'
 
 import { JwtUser } from '~/shared/types'
 
-import { UserService } from '../../user/user.service'
+import { UserRepository } from '../../user/repositories/user.repository'
 
 @Injectable()
 export class JwtRefreshStrategy extends PassportStrategy(
@@ -14,7 +15,8 @@ export class JwtRefreshStrategy extends PassportStrategy(
   'jwt-refresh',
 ) {
   constructor(
-    private readonly userService: UserService,
+    @InjectRepository(UserRepository)
+    private readonly userRepository: UserRepository,
     readonly configService: ConfigService,
   ) {
     super({
@@ -29,7 +31,7 @@ export class JwtRefreshStrategy extends PassportStrategy(
 
   async validate(request: FastifyRequest, { id }: JwtUser) {
     const refreshToken = request.cookies?.Refresh
-    const user = await this.userService.getUserIfRefreshTokenMatches(
+    const user = await this.userRepository.getUserIfRefreshTokenMatches(
       id,
       refreshToken,
     )

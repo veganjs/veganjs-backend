@@ -1,4 +1,5 @@
 import { HttpStatus, Injectable, UnauthorizedException } from '@nestjs/common'
+import { InjectRepository } from '@nestjs/typeorm'
 import { ConfigService } from '@nestjs/config'
 import { JwtService } from '@nestjs/jwt'
 import { FastifyReply } from 'fastify'
@@ -6,14 +7,15 @@ import { FastifyReply } from 'fastify'
 import { JwtUser } from '~/shared/types'
 
 import { UserEntity } from '../user/entities/user.entity'
-import { UserService } from '../user/user.service'
+import { UserRepository } from '../user/repositories/user.repository'
 import { LoginCredentialsDto, SignUpCredentialsDto } from './dto/auth.dto'
 
 @Injectable()
 export class AuthService {
   constructor(
+    @InjectRepository(UserRepository)
+    private readonly userRepository: UserRepository,
     private readonly configService: ConfigService,
-    private readonly userService: UserService,
     private readonly jwtService: JwtService,
   ) {}
 
@@ -62,7 +64,7 @@ export class AuthService {
   }
 
   async signIn(reply: FastifyReply, credentials: LoginCredentialsDto) {
-    const user = await this.userService.validateUserPassword(credentials)
+    const user = await this.userRepository.validateUserPassword(credentials)
 
     if (!user) {
       throw new UnauthorizedException('Invalid credentials')
@@ -73,7 +75,7 @@ export class AuthService {
     const { cookie: refreshTokenCookie, refreshToken } =
       this.getJwtRefreshTokenCookie(payload)
 
-    await this.userService.setCurrentRefreshToken(user, refreshToken)
+    await this.userRepository.setCurrentRefreshToken(user, refreshToken)
 
     reply
       .header('Set-Cookie', [accessTokenCookie, refreshTokenCookie])
@@ -81,7 +83,7 @@ export class AuthService {
   }
 
   async signUp(credentials: SignUpCredentialsDto) {
-    return this.userService.createUser(credentials)
+    return this.userRepository.createUser(credentials)
   }
 
   async refreshToken(reply: FastifyReply, user: JwtUser) {
@@ -92,7 +94,7 @@ export class AuthService {
 
   async logout(reply: FastifyReply, user: JwtUser) {
     const logoutCookie = this.getCookieForLogout()
-    await this.userService.resetRefreshToken(user.id)
+    await this.userRepository.resetRefreshToken(user.id)
     reply.header('Set-Cookie', logoutCookie)
   }
 }

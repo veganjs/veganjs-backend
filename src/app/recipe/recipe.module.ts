@@ -1,11 +1,13 @@
 import { Module } from '@nestjs/common'
 import { TypeOrmModule } from '@nestjs/typeorm'
 
+import { TypeOrmExModule } from '~/shared/lib/typeorm-ex'
+
 import { AuthModule } from '../auth/auth.module'
+import { UserRepository } from '../user/repositories/user.repository'
 import { IngredientService } from '../ingredient/ingredient.service'
 import { IngredientEntity } from '../ingredient/entities/ingredient.entity'
 import { CategoryEntity } from '../category/entities/category.entity'
-import { UserEntity } from '../user/entities/user.entity'
 import { CategoryService } from './../category/category.service'
 import { UserService } from '../user/user.service'
 import { FileService } from '../file/file.service'
@@ -19,8 +21,8 @@ import { RecipeService } from './recipe.service'
 
 @Module({
   imports: [
+    TypeOrmExModule.forCustomRepository([UserRepository]),
     TypeOrmModule.forFeature([
-      UserEntity,
       RecipeEntity,
       CategoryEntity,
       IngredientEntity,
