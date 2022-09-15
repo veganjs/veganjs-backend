@@ -7,7 +7,7 @@ import {
 } from '@nestjs/platform-fastify'
 
 import { AppModule } from '~/app/app.module'
-import { apiPrefix, docPrefix } from '~/config/constants.config'
+import { Path } from '~/config/constants.config'
 import { setupSwagger } from '~/config/swagger.config'
 import { loadPlugins } from '~/config/plugins.config'
 import { TrimPipe } from '~/shared/pipes'
@@ -24,7 +24,7 @@ async function bootstrap() {
   const port = configService.get<string>('PORT')
   const host = configService.get<string>('HOST_NAME')
 
-  app.setGlobalPrefix(apiPrefix)
+  app.setGlobalPrefix(Path.Api)
 
   app.useGlobalPipes(new TrimPipe())
 
@@ -42,8 +42,10 @@ async function bootstrap() {
 
   await app.listen(port)
 
-  logger.log(`🚀 API app is running on: ${host}:${port}/${apiPrefix}`)
-  logger.log(`📑 API documentation is running on: ${host}:${port}/${docPrefix}`)
+  logger.log(`🚀 API app is running on: ${host}:${port}/${Path.Api}`)
+  logger.log(
+    `📑 API documentation is running on: ${host}:${port}/${Path.Documentation}`,
+  )
 }
 
 bootstrap()

@@ -1,3 +1,5 @@
-export const apiPrefix = 'api'
-export const docPrefix = 'swagger'
-export const staticPath = 'storage'
+export enum Path {
+  Api = 'api',
+  Documentation = 'swagger',
+  Static = 'storage',
+}

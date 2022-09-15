@@ -9,7 +9,7 @@ import fastifyCsrf from '@fastify/csrf-protection'
 import fastifyMultipart from '@fastify/multipart'
 import { join } from 'path'
 
-import { staticPath } from './constants.config'
+import { Path } from './constants.config'
 
 export async function loadPlugins(app: NestFastifyApplication) {
   const configService = app.get(ConfigService)
@@ -19,8 +19,8 @@ export async function loadPlugins(app: NestFastifyApplication) {
     origin: configService.get<string>('CORS_ORIGIN'),
   })
   await app.register(fastifyStatic, {
-    root: join(process.cwd(), staticPath),
-    prefix: `/${staticPath}/`,
+    root: join(process.cwd(), Path.Static),
+    prefix: `/${Path.Static}/`,
     cacheControl: true,
   })
   await app.register(fastifyMultipart)

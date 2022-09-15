@@ -9,7 +9,7 @@ import { pipeline } from 'stream'
 import { promisify } from 'util'
 import * as fs from 'fs'
 
-import { staticPath } from '~/config/constants.config'
+import { Path } from '~/config/constants.config'
 
 import { UploadFileOptions } from './file.types'
 
@@ -26,7 +26,7 @@ export class FileService {
 
   async uploadFile(req: FastifyRequest, options: UploadFileOptions) {
     const {
-      destination = staticPath,
+      destination = Path.Static,
       maxFileSize = 2 * 1024 * 1024, // 2 MB
       allowedMimetypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'],
       rename = (fileName) => `${Date.now()}_${fileName}`,

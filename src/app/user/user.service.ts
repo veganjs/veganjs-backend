@@ -7,7 +7,7 @@ import { FastifyRequest } from 'fastify'
 import { InjectRepository } from '@nestjs/typeorm'
 
 import { PostgresError } from '~/shared/types'
-import { staticPath } from '~/config/constants.config'
+import { Path } from '~/config/constants.config'
 
 import { UserRepository } from './repositories/user.repository'
 import { FileService } from '../file/file.service'
@@ -63,7 +63,7 @@ export class UserService {
     } = await this.getUserById(userId)
 
     const filePath = await this.fileService.uploadFile(req, {
-      destination: `${staticPath}/avatars`,
+      destination: `${Path.Static}/avatars`,
       rename: (fileName) => `${username}_${Date.now()}_${fileName}`,
     })
 

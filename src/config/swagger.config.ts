@@ -1,7 +1,7 @@
 import { NestFastifyApplication } from '@nestjs/platform-fastify'
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger'
 
-import { docPrefix } from './constants.config'
+import { Path } from './constants.config'
 
 export function setupSwagger(app: NestFastifyApplication) {
   const options = new DocumentBuilder()
@@ -11,5 +11,5 @@ export function setupSwagger(app: NestFastifyApplication) {
     .build()
 
   const document = SwaggerModule.createDocument(app, options)
-  SwaggerModule.setup(docPrefix, app, document)
+  SwaggerModule.setup(Path.Documentation, app, document)
 }
