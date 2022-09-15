@@ -62,7 +62,7 @@ export class UserController {
 
   @Put('change-password')
   @JwtAuthRequired()
-  @ApiBadRequestResponse({ description: 'Invalid body' })
+  @ApiBadRequestResponse({ description: 'Invalid body or password' })
   @ApiOkResponse({ description: 'User password has been updated' })
   @ApiOperation({ summary: 'Update user password' })
   updatePassword(@GetUser() user: JwtUser, @Body() payload: UpdatePasswordDto) {

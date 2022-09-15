@@ -60,13 +60,12 @@ export class UserService {
 
   async updatePassword(payload: UpdatePasswordDto, userId: string) {
     const user = await this.getUserById(userId)
-
-    const isEqualToCurrentPassword = await bcrypt.compare(
+    const isCurrentPasswordConfirmed = await bcrypt.compare(
       payload.oldPassword,
       user.password,
     )
 
-    if (!isEqualToCurrentPassword) {
+    if (!isCurrentPasswordConfirmed) {
       throw new BadRequestException('Invalid password')
     }
 
