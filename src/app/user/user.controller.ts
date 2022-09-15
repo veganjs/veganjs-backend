@@ -3,19 +3,26 @@ import {
   Get,
   Post,
   Patch,
+  Put,
   Body,
   Param,
   HttpCode,
   HttpStatus,
   Controller,
 } from '@nestjs/common'
-import { ApiTags, ApiOperation, ApiOkResponse } from '@nestjs/swagger'
+import {
+  ApiTags,
+  ApiOperation,
+  ApiOkResponse,
+  ApiBadRequestResponse,
+} from '@nestjs/swagger'
 import { FastifyRequest } from 'fastify'
 
 import { ApiFormData, ApiGetOne } from '~/shared/decorators'
 import { JwtUser } from '~/shared/types'
 
 import { JwtAuthRequired } from '../auth/decorators/jwt-auth.decorator'
+import { UpdatePasswordDto } from '../auth/dto/update-password.dto'
 import { GetUser } from './decorators/user.decorator'
 import { UpdateProfileDto } from './dto/update-profile.dto'
 import { UserDto } from './dto/user.dto'
@@ -46,10 +53,20 @@ export class UserController {
   @Patch('profile')
   @HttpCode(HttpStatus.OK)
   @JwtAuthRequired()
+  @ApiBadRequestResponse({ description: 'Invalid body' })
   @ApiOkResponse({ description: 'User profile has been updated' })
   @ApiOperation({ summary: 'Update user profile' })
   updateProfile(@GetUser() user: JwtUser, @Body() payload: UpdateProfileDto) {
     return this.userService.updateUser(payload, user.id)
+  }
+
+  @Put('change-password')
+  @JwtAuthRequired()
+  @ApiBadRequestResponse({ description: 'Invalid body' })
+  @ApiOkResponse({ description: 'User password has been updated' })
+  @ApiOperation({ summary: 'Update user password' })
+  updatePassword(@GetUser() user: JwtUser, @Body() payload: UpdatePasswordDto) {
+    return this.userService.updatePassword(payload, user.id)
   }
 
   @Post('avatar')

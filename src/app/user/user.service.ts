@@ -2,15 +2,18 @@ import {
   Injectable,
   ConflictException,
   NotFoundException,
+  BadRequestException,
 } from '@nestjs/common'
 import { FastifyRequest } from 'fastify'
 import { InjectRepository } from '@nestjs/typeorm'
+import * as bcrypt from 'bcryptjs'
 
 import { PostgresError } from '~/shared/types'
 import { Path } from '~/config/constants.config'
 
-import { UserRepository } from './repositories/user.repository'
+import { UpdatePasswordDto } from '../auth/dto/update-password.dto'
 import { FileService } from '../file/file.service'
+import { UserRepository } from './repositories/user.repository'
 import { UpdateUserDto } from './dto/update-user.dto'
 
 @Injectable()
@@ -53,6 +56,24 @@ export class UserService {
         throw new ConflictException(`User ${payload.username} already exists`)
       }
     }
+  }
+
+  async updatePassword(payload: UpdatePasswordDto, userId: string) {
+    const user = await this.getUserById(userId)
+
+    const isEqualToCurrentPassword = await bcrypt.compare(
+      payload.oldPassword,
+      user.password,
+    )
+
+    if (!isEqualToCurrentPassword) {
+      throw new BadRequestException('Invalid password')
+    }
+
+    await this.userRepository.update(
+      { id: user.id },
+      { password: await bcrypt.hash(payload.newPassword, user.salt) },
+    )
   }
 
   async uploadAvatar(req: FastifyRequest, userId: string) {
