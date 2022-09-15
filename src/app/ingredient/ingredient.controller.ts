@@ -21,7 +21,9 @@ import {
 import { PaginationOptions, Role } from '~/shared/types'
 
 import { JwtAuthRequired } from '../auth/decorators/jwt-auth.decorator'
-import { Ingredient, IngredientDto } from './dto/ingredient.dto'
+import { IngredientDto } from './dto/ingredient.dto'
+import { CreateIngredientDto } from './dto/create-ingredient.dto'
+import { UpdateIngredientDto } from './dto/update-ingredient.dto'
 import { IngredientService } from './ingredient.service'
 
 @Controller('ingredients')
@@ -30,7 +32,7 @@ export class IngredientController {
   constructor(private readonly ingredientService: IngredientService) {}
 
   @Get()
-  @ApiGetMany({ model: Ingredient, paginated: true, search: true })
+  @ApiGetMany({ model: IngredientDto, paginated: true, search: true })
   getAllIngredients(
     @Query('search') search: string,
     @Query() options: PaginationOptions,
@@ -39,31 +41,31 @@ export class IngredientController {
   }
 
   @Get(':id')
-  @ApiGetOne({ model: Ingredient })
+  @ApiGetOne({ model: IngredientDto })
   getIngredientById(@Param('id', ParseUUIDPipe) id: string) {
     return this.ingredientService.getIngredientById(id)
   }
 
   @Post()
   @JwtAuthRequired(Role.ADMIN)
-  @ApiCreate({ model: Ingredient, conflict: true })
-  createIngredient(@Body() payload: IngredientDto) {
+  @ApiCreate({ model: IngredientDto, conflict: true })
+  createIngredient(@Body() payload: CreateIngredientDto) {
     return this.ingredientService.createIngredient(payload)
   }
 
   @Put(':id')
   @JwtAuthRequired(Role.ADMIN)
-  @ApiUpdate({ model: Ingredient, conflict: true })
+  @ApiUpdate({ model: IngredientDto, conflict: true })
   updateIngredient(
     @Param('id', ParseUUIDPipe) id: string,
-    @Body() payload: IngredientDto,
+    @Body() payload: UpdateIngredientDto,
   ) {
     return this.ingredientService.updateIngredient(id, payload)
   }
 
   @Delete(':id')
   @JwtAuthRequired(Role.ADMIN)
-  @ApiDelete({ model: Ingredient })
+  @ApiDelete({ model: IngredientDto })
   deleteIngredient(@Param('id', ParseUUIDPipe) id: string) {
     return this.ingredientService.deleteIngredient(id)
   }

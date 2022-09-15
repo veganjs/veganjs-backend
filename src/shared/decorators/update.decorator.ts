@@ -7,6 +7,8 @@ import {
   ApiBadRequestResponse,
 } from '@nestjs/swagger'
 
+import { getModelName } from '../lib/getModelName'
+
 interface ApiUpdateParams<Model> {
   model: Model
   attribute?: string
@@ -21,19 +23,21 @@ export const ApiUpdate = <Model extends Type<unknown>>({
   const defaultDecorators = [
     ApiOkResponse({
       type: model,
-      description: `${model.name} has been updated`,
+      description: `${getModelName(model)} has been updated`,
     }),
-    ApiNotFoundResponse({ description: `${model.name} not found` }),
+    ApiNotFoundResponse({ description: `${getModelName(model)} not found` }),
     ApiBadRequestResponse({ description: 'Invalid body' }),
     ApiOperation({
-      summary: `Update ${model.name.toLowerCase()} by ${attribute}`,
+      summary: `Update ${getModelName(model).toLowerCase()} by ${attribute}`,
     }),
   ]
 
   if (conflict) {
     return applyDecorators(
       ...defaultDecorators,
-      ApiConflictResponse({ description: `${model.name} already exists` }),
+      ApiConflictResponse({
+        description: `${getModelName(model)} already exists`,
+      }),
     )
   }
 

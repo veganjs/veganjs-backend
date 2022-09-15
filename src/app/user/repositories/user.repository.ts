@@ -5,10 +5,8 @@ import * as bcrypt from 'bcryptjs'
 import { PostgresError } from '~/shared/types'
 import { CustomRepository } from '~/shared/lib/typeorm-ex'
 
-import {
-  LoginCredentialsDto,
-  SignUpCredentialsDto,
-} from '../../auth/dto/auth.dto'
+import { LoginCredentialsDto } from '../../auth/dto/login.dto'
+import { SignUpCredentialsDto } from '../../auth/dto/sign-up.dto'
 import { UserEntity } from '../entities/user.entity'
 
 @CustomRepository(UserEntity)

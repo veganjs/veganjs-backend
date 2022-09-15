@@ -1,6 +1,7 @@
 import { applyDecorators, Type } from '@nestjs/common'
 import { ApiQuery, ApiOkResponse, ApiOperation } from '@nestjs/swagger'
 
+import { getModelName } from '../lib/getModelName'
 import { ApiPaginatedResponse } from './paginated.decorator'
 
 interface ApiGetManyParams<Model> {
@@ -17,10 +18,10 @@ export const ApiGetMany = <Model extends Type<unknown>>({
   const defaultDecorators = [
     ApiOkResponse({
       type: [model],
-      description: `${model.name} list has been fetched`,
+      description: `${getModelName(model)} list has been fetched`,
     }),
     ApiOperation({
-      summary: `Get many ${model.name.toLowerCase()} items`,
+      summary: `Get many ${getModelName(model).toLowerCase()} items`,
     }),
   ]
 
@@ -30,7 +31,7 @@ export const ApiGetMany = <Model extends Type<unknown>>({
     decorators.push(
       ApiPaginatedResponse({
         model,
-        description: `${model.name} list has been fetched`,
+        description: `${getModelName(model)} list has been fetched`,
       }),
     )
   }

@@ -7,7 +7,7 @@ import {
 } from 'typeorm'
 import { Exclude } from 'class-transformer'
 
-import { RecipeEntity } from '../../../entities/recipe.entity'
+import { RecipeEntity } from './recipe.entity'
 
 @Entity()
 export class StepEntity extends BaseEntity {

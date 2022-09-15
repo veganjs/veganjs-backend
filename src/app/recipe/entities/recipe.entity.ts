@@ -13,8 +13,8 @@ import { ColumnDateTransformer } from '~/shared/transformers'
 
 import { UserEntity } from '../../user/entities/user.entity'
 import { CategoryEntity } from '../../category/entities/category.entity'
-import { StepEntity } from '../modules/step/entities/step.entity'
-import { RecipeIngredientEntity } from '../modules/recipe-ingredient/entities/recipe-ingredient.entity'
+import { RecipeIngredientEntity } from './recipe-ingredient.entity'
+import { StepEntity } from './step.entity'
 
 @Entity()
 export class RecipeEntity extends BaseEntity {

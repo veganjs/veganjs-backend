@@ -11,7 +11,7 @@ import { staticPath } from '~/config/constants.config'
 
 import { UserRepository } from './repositories/user.repository'
 import { FileService } from '../file/file.service'
-import { UpdateUserDto } from './dto/user.dto'
+import { UpdateUserDto } from './dto/update-user.dto'
 
 @Injectable()
 export class UserService {

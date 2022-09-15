@@ -22,7 +22,8 @@ import { JwtAuthRequired } from '../auth/decorators/jwt-auth.decorator'
 import { GetUser } from '../user/decorators/user.decorator'
 import { RecipeOwnerRequired } from './decorators/owner.decorator'
 import { RecipeService } from './recipe.service'
-import { Recipe, RecipeDto } from './dto/recipe.dto'
+import { RecipeDto } from './dto/recipe.dto'
+import { CreateRecipeDto } from './dto/create-recipe.dto'
 
 // TODO edit recipe
 @Controller('recipes')
@@ -31,7 +32,7 @@ export class RecipeController {
   constructor(private readonly recipeService: RecipeService) {}
 
   @Get()
-  @ApiGetMany({ model: Recipe, paginated: true, search: true })
+  @ApiGetMany({ model: RecipeDto, paginated: true, search: true })
   getAllRecipes(
     @Query('search') search: string,
     @Query() options: PaginationOptions,
@@ -40,22 +41,22 @@ export class RecipeController {
   }
 
   @Get(':id')
-  @ApiGetOne({ model: Recipe })
+  @ApiGetOne({ model: RecipeDto })
   getRecipeById(@Param('id', ParseUUIDPipe) id: string) {
     return this.recipeService.getRecipeById(id)
   }
 
   @Post()
   @JwtAuthRequired()
-  @ApiCreate({ model: Recipe })
+  @ApiCreate({ model: RecipeDto })
   @ApiNotFoundResponse({ description: 'Ingredients not found' })
-  createRecipe(@GetUser() user: JwtUser, @Body() payload: RecipeDto) {
+  createRecipe(@GetUser() user: JwtUser, @Body() payload: CreateRecipeDto) {
     return this.recipeService.createRecipe(payload, user.id)
   }
 
   @Delete(':id')
   @RecipeOwnerRequired()
-  @ApiDelete({ model: Recipe })
+  @ApiDelete({ model: RecipeDto })
   deleteRecipe(@Param('id', ParseUUIDPipe) id: string) {
     return this.recipeService.deleteRecipe(id)
   }

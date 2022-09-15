@@ -20,7 +20,9 @@ import {
 import { Role } from '~/shared/types'
 
 import { JwtAuthRequired } from '../auth/decorators/jwt-auth.decorator'
-import { Category, CategoryDto } from './dto/category.dto'
+import { CreateCategoryDto } from './dto/create-category.dto'
+import { UpdateCategoryDto } from './dto/update-category.dto'
+import { CategoryDto } from './dto/category.dto'
 import { CategoryService } from './category.service'
 
 @Controller('categories')
@@ -29,37 +31,37 @@ export class CategoryController {
   constructor(private readonly categoryService: CategoryService) {}
 
   @Get()
-  @ApiGetMany({ model: Category })
+  @ApiGetMany({ model: CategoryDto })
   getAllCategories() {
     return this.categoryService.getAllCategories()
   }
 
   @Get(':id')
-  @ApiGetOne({ model: Category })
+  @ApiGetOne({ model: CategoryDto })
   getCategoryById(@Param('id', ParseUUIDPipe) id: string) {
     return this.categoryService.getCategoryById(id)
   }
 
   @Post()
   @JwtAuthRequired(Role.ADMIN)
-  @ApiCreate({ model: Category, conflict: true })
-  createCategory(@Body() payload: CategoryDto) {
+  @ApiCreate({ model: CategoryDto, conflict: true })
+  createCategory(@Body() payload: CreateCategoryDto) {
     return this.categoryService.createCategory(payload)
   }
 
   @Put(':id')
   @JwtAuthRequired(Role.ADMIN)
-  @ApiUpdate({ model: Category, conflict: true })
+  @ApiUpdate({ model: CategoryDto, conflict: true })
   updateCategory(
     @Param('id', ParseUUIDPipe) id: string,
-    @Body() payload: CategoryDto,
+    @Body() payload: UpdateCategoryDto,
   ) {
     return this.categoryService.updateCategory(id, payload)
   }
 
   @Delete(':id')
   @JwtAuthRequired(Role.ADMIN)
-  @ApiDelete({ model: Category })
+  @ApiDelete({ model: CategoryDto })
   deleteCategory(@Param('id', ParseUUIDPipe) id: string) {
     return this.categoryService.deleteCategory(id)
   }

@@ -1,20 +1,15 @@
-import { Injectable } from '@nestjs/common'
-import { InjectRepository } from '@nestjs/typeorm'
 import { Repository } from 'typeorm'
 
-import { IngredientEntity } from '../../../ingredient/entities/ingredient.entity'
-import { RecipeIngredientEntity } from './entities/recipe-ingredient.entity'
-import { RecipeIngredientDto } from './dto/recipe-ingredient.dto'
+import { CustomRepository } from '~/shared/lib/typeorm-ex'
 
-@Injectable()
-export class RecipeIngredientService {
-  constructor(
-    @InjectRepository(RecipeIngredientEntity)
-    private readonly recipeIngredientRepository: Repository<RecipeIngredientEntity>,
-  ) {}
+import { IngredientEntity } from '../../ingredient/entities/ingredient.entity'
+import { CreateRecipeIngredientDto } from '../dto/recipe-ingredient/create-recipe-ingredient.dto'
+import { RecipeIngredientEntity } from '../entities/recipe-ingredient.entity'
 
+@CustomRepository(RecipeIngredientEntity)
+export class RecipeIngredientRepository extends Repository<RecipeIngredientEntity> {
   private prepareRecipeIngredient(
-    ingredientPayload: RecipeIngredientDto,
+    ingredientPayload: CreateRecipeIngredientDto,
     ingredient: IngredientEntity,
     recipeId: string,
   ) {
@@ -29,7 +24,7 @@ export class RecipeIngredientService {
   }
 
   async createRecipeIngredients(
-    ingredientsPayload: RecipeIngredientDto[],
+    ingredientsPayload: CreateRecipeIngredientDto[],
     ingredients: IngredientEntity[],
     recipeId: string,
   ) {
@@ -43,6 +38,6 @@ export class RecipeIngredientService {
         recipeId,
       )
     })
-    return this.recipeIngredientRepository.save(recipeIngredients)
+    return this.save(recipeIngredients)
   }
 }

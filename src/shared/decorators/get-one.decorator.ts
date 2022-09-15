@@ -6,6 +6,8 @@ import {
   ApiOperation,
 } from '@nestjs/swagger'
 
+import { getModelName } from '../lib/getModelName'
+
 interface ApiGetOneParams<Model> {
   model: Model
   attribute?: string
@@ -18,12 +20,12 @@ export const ApiGetOne = <Model extends Type<unknown>>({
   return applyDecorators(
     ApiOkResponse({
       type: model,
-      description: `${model.name} has been fetched`,
+      description: `${getModelName(model)} has been fetched`,
     }),
-    ApiNotFoundResponse({ description: `${model.name} not found` }),
+    ApiNotFoundResponse({ description: `${getModelName(model)} not found` }),
     ApiBadRequestResponse({ description: 'Invalid parameter' }),
     ApiOperation({
-      summary: `Get ${model.name.toLowerCase()} by ${attribute}`,
+      summary: `Get ${getModelName(model).toLowerCase()} by ${attribute}`,
     }),
   )
 }

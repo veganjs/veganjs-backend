@@ -17,7 +17,8 @@ import { JwtUser } from '~/shared/types'
 
 import { JwtAuthRequired } from '../auth/decorators/jwt-auth.decorator'
 import { GetUser } from './decorators/user.decorator'
-import { UpdateProfileDto, User } from './dto/user.dto'
+import { UpdateProfileDto } from './dto/update-profile.dto'
+import { UserDto } from './dto/user.dto'
 import { UserService } from './user.service'
 
 @Controller('users')
@@ -26,14 +27,17 @@ export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Get(':username')
-  @ApiGetOne({ model: User, attribute: 'username' })
+  @ApiGetOne({ model: UserDto, attribute: 'username' })
   getUserByUsername(@Param('username') username: string) {
     return this.userService.getUserByUsername(username)
   }
 
   @Get('me')
   @JwtAuthRequired()
-  @ApiOkResponse({ type: User, description: 'Current user has been fetched' })
+  @ApiOkResponse({
+    type: UserDto,
+    description: 'Current user has been fetched',
+  })
   @ApiOperation({ summary: 'Get current user' })
   getMe(@GetUser() user: JwtUser) {
     return user

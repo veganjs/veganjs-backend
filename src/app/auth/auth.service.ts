@@ -8,7 +8,8 @@ import { JwtUser } from '~/shared/types'
 
 import { UserEntity } from '../user/entities/user.entity'
 import { UserRepository } from '../user/repositories/user.repository'
-import { LoginCredentialsDto, SignUpCredentialsDto } from './dto/auth.dto'
+import { LoginCredentialsDto } from './dto/login.dto'
+import { SignUpCredentialsDto } from './dto/sign-up.dto'
 
 @Injectable()
 export class AuthService {

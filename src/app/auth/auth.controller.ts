@@ -10,12 +10,13 @@ import { FastifyReply } from 'fastify'
 import { JwtUser } from '~/shared/types'
 import { ApiCreate } from '~/shared/decorators'
 
-import { User } from '../user/dto/user.dto'
+import { UserDto } from '../user/dto/user.dto'
 import { GetUser } from '../user/decorators/user.decorator'
 import { AuthService } from './auth.service'
 import { JwtAuthRequired } from './decorators/jwt-auth.decorator'
 import { JwtAuthRefreshRequired } from './decorators/jwt-auth-refresh.decorator'
-import { LoginCredentialsDto, SignUpCredentialsDto } from './dto/auth.dto'
+import { LoginCredentialsDto } from './dto/login.dto'
+import { SignUpCredentialsDto } from './dto/sign-up.dto'
 
 @ApiTags('auth')
 @Controller('auth')
@@ -31,7 +32,7 @@ export class AuthController {
   }
 
   @Post('signup')
-  @ApiCreate({ model: User, conflict: true })
+  @ApiCreate({ model: UserDto, conflict: true })
   signUp(@Body() credentials: SignUpCredentialsDto) {
     return this.authService.signUp(credentials)
   }

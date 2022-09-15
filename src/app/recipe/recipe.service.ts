@@ -8,25 +8,25 @@ import { IngredientService } from '../ingredient/ingredient.service'
 import { CategoryService } from '../category/category.service'
 import { UserService } from './../user/user.service'
 import { RecipeEntity } from './entities/recipe.entity'
-import { RecipeIngredientService } from './modules/recipe-ingredient/recipe-ingredient.service'
-import { StepService } from './modules/step/step.service'
-import { RecipeDto } from './dto/recipe.dto'
+import { CreateRecipeDto } from './dto/create-recipe.dto'
+import { RecipeIngredientRepository } from './repositories/recipe-ingredient.repository'
+import { StepRepository } from './repositories/step.repository'
 
 @Injectable()
 export class RecipeService {
   constructor(
     @InjectRepository(RecipeEntity)
     private readonly recipeRepository: Repository<RecipeEntity>,
+    @InjectRepository(RecipeIngredientRepository)
+    private readonly recipeIngredientRepository: RecipeIngredientRepository,
+    @InjectRepository(StepRepository)
+    private readonly stepRepository: StepRepository,
     @Inject(IngredientService)
     private readonly ingredientService: IngredientService,
-    @Inject(RecipeIngredientService)
-    private readonly recipeIngredientService: RecipeIngredientService,
     @Inject(CategoryService)
     private readonly categoryService: CategoryService,
     @Inject(UserService)
     private readonly userService: UserService,
-    @Inject(StepService)
-    private readonly stepService: StepService,
   ) {}
 
   async getAllRecipes(query: string, options: PaginationOptions) {
@@ -62,7 +62,7 @@ export class RecipeService {
     })
   }
 
-  async createRecipe(payload: RecipeDto, userId: string) {
+  async createRecipe(payload: CreateRecipeDto, userId: string) {
     const ingredientIds = payload.ingredients.map((ingredient) => ingredient.id)
     const ingredients = await this.ingredientService.getIngredientsByIds(
       ingredientIds,
@@ -89,13 +89,13 @@ export class RecipeService {
     const newRecipe = await this.recipeRepository.save(recipe)
 
     newRecipe.ingredients =
-      await this.recipeIngredientService.createRecipeIngredients(
+      await this.recipeIngredientRepository.createRecipeIngredients(
         payload.ingredients,
         ingredients,
         newRecipe.id,
       )
 
-    newRecipe.steps = await this.stepService.createSteps(
+    newRecipe.steps = await this.stepRepository.createSteps(
       payload.steps,
       newRecipe.id,
     )

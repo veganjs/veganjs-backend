@@ -1,61 +1,23 @@
 import {
-  Min,
-  IsUrl,
   IsUUID,
   IsArray,
-  IsNumber,
-  IsString,
-  IsNotEmpty,
-  IsOptional,
   ArrayNotEmpty,
   ValidateNested,
-  MaxLength,
   ArrayMinSize,
 } from 'class-validator'
 import { Type } from 'class-transformer'
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger'
+import { ApiProperty } from '@nestjs/swagger'
 
-import { User } from '../../user/dto/user.dto'
-import { Category } from '../../category/dto/category.dto'
-import { Step, StepDto } from '../modules/step/dto/step.dto'
-import {
-  RecipeIngredient,
-  RecipeIngredientDto,
-} from '../modules/recipe-ingredient/dto/recipe-ingredient.dto'
+import { UserDto } from '../../user/dto/user.dto'
+import { CategoryDto } from '../../category/dto/category.dto'
+import { RecipeIngredientDto } from './recipe-ingredient/recipe-ingredient.dto'
+import { StepDto } from './step/step.dto'
+import { RecipeCommonDto } from './recipe-common.dto'
 
-class RecipeCommon {
-  @IsNotEmpty()
-  @IsString()
-  @MaxLength(100)
-  @ApiProperty({ description: 'Recipe title' })
-  title: string
-
-  @IsNotEmpty()
-  @IsString()
-  @MaxLength(500)
-  @ApiProperty({ description: 'Recipe description' })
-  description: string
-
-  @IsNumber()
-  @Min(1)
-  @ApiProperty({
-    minimum: 1,
-    description: 'Number of servings a recipe will make',
-  })
-  servings: number
-
-  @IsNotEmpty()
-  @IsString()
-  @IsUrl()
-  @IsOptional()
-  @ApiPropertyOptional({ description: 'Recipe original source' })
-  source: string
-}
-
-export class RecipeDto extends RecipeCommon {
+export class RecipeDto extends RecipeCommonDto {
   @IsUUID()
-  @ApiProperty({ description: 'Category id' })
-  categoryId: string
+  @ApiProperty({ format: 'uuid', description: 'Recipe id' })
+  id: string
 
   @IsArray()
   @ArrayNotEmpty()
@@ -78,38 +40,10 @@ export class RecipeDto extends RecipeCommon {
   @ValidateNested({ each: true })
   @Type(() => StepDto)
   steps: StepDto[]
-}
 
-export class Recipe extends RecipeCommon {
-  @IsUUID()
-  @ApiProperty({ format: 'uuid', description: 'Recipe id' })
-  id: string
+  @ApiProperty({ type: CategoryDto })
+  category: CategoryDto
 
-  @IsArray()
-  @ArrayNotEmpty()
-  @ArrayMinSize(1)
-  @ApiProperty({
-    isArray: true,
-    type: RecipeIngredient,
-  })
-  @ValidateNested({ each: true })
-  @Type(() => RecipeIngredient)
-  ingredients: RecipeIngredient[]
-
-  @IsArray()
-  @ArrayNotEmpty()
-  @ArrayMinSize(1)
-  @ApiProperty({
-    isArray: true,
-    type: Step,
-  })
-  @ValidateNested({ each: true })
-  @Type(() => Step)
-  steps: Step[]
-
-  @ApiProperty({ type: Category })
-  category: Category
-
-  @ApiProperty({ type: User })
-  author: User
+  @ApiProperty({ type: UserDto })
+  author: UserDto
 }

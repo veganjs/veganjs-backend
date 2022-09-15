@@ -6,6 +6,8 @@ import {
   ApiOperation,
 } from '@nestjs/swagger'
 
+import { getModelName } from '../lib/getModelName'
+
 interface ApiDeleteParams<Model> {
   model: Model
   attribute?: string
@@ -17,12 +19,12 @@ export const ApiDelete = <Model extends Type<unknown>>({
 }: ApiDeleteParams<Model>) => {
   return applyDecorators(
     ApiOkResponse({
-      description: `${model.name} has been deleted`,
+      description: `${getModelName(model)} has been deleted`,
     }),
-    ApiNotFoundResponse({ description: `${model.name} not found` }),
+    ApiNotFoundResponse({ description: `${getModelName(model)} not found` }),
     ApiBadRequestResponse({ description: 'Invalid parameter' }),
     ApiOperation({
-      summary: `Delete ${model.name.toLowerCase()} by ${attribute}`,
+      summary: `Delete ${getModelName(model).toLowerCase()} by ${attribute}`,
     }),
   )
 }

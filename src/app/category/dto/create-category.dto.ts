@@ -1,13 +1,9 @@
-import { IsNotEmpty, IsUUID, IsEnum } from 'class-validator'
+import { IsNotEmpty, IsEnum } from 'class-validator'
 import { ApiProperty } from '@nestjs/swagger'
 
 import { CategoryTopic } from '../category.types'
 
-export class CategoryDto {
-  @IsUUID()
-  @ApiProperty({ description: 'Category id', format: 'uuid' })
-  id: string
-
+export class CreateCategoryDto {
   @IsNotEmpty()
   @IsEnum(CategoryTopic)
   @ApiProperty({ description: 'Category name', enum: CategoryTopic })
