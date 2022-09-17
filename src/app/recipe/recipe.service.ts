@@ -58,7 +58,7 @@ export class RecipeService {
   async getRecipeById(id: string) {
     return await this.recipeRepository.findOne({
       where: { id },
-      relations: ['ingredients', 'ingredients.ingredient'],
+      relations: ['steps', 'ingredients', 'ingredients.ingredient'],
     })
   }
 
