@@ -4,9 +4,13 @@ import {
   ArrayNotEmpty,
   ValidateNested,
   ArrayMinSize,
+  IsNotEmpty,
+  IsISO8601,
 } from 'class-validator'
 import { Type } from 'class-transformer'
 import { ApiProperty } from '@nestjs/swagger'
+
+import { DateISO } from '~/shared/types'
 
 import { UserDto } from '../../user/dto/user.dto'
 import { CategoryDto } from '../../category/dto/category.dto'
@@ -46,4 +50,14 @@ export class RecipeDto extends RecipeCommonDto {
 
   @ApiProperty({ type: UserDto })
   author: UserDto
+
+  @IsNotEmpty()
+  @IsISO8601()
+  @ApiProperty({ description: 'Recipe creation date' })
+  createdAt: DateISO
+
+  @IsNotEmpty()
+  @IsISO8601()
+  @ApiProperty({ description: 'Recipe updation date' })
+  updatedAt: DateISO
 }

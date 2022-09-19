@@ -44,7 +44,7 @@ export class UserRepository extends Repository<UserEntity> {
   }
 
   async resetRefreshToken(id: string) {
-    return this.update({ id }, { refreshToken: null })
+    await this.update({ id }, { refreshToken: null })
   }
 
   async getUserIfRefreshTokenMatches(id: string, refreshToken: string) {

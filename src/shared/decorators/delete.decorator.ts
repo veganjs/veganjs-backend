@@ -9,22 +9,26 @@ import {
 import { getModelName } from '../lib/getModelName'
 
 interface ApiDeleteParams<Model> {
+  name?: string
   model: Model
   attribute?: string
 }
 
 export const ApiDelete = <Model extends Type<unknown>>({
+  name,
   model,
   attribute = 'id',
 }: ApiDeleteParams<Model>) => {
+  const targetName = name ?? getModelName(model)
+
   return applyDecorators(
     ApiOkResponse({
-      description: `${getModelName(model)} has been deleted`,
+      description: `${targetName} has been deleted`,
     }),
-    ApiNotFoundResponse({ description: `${getModelName(model)} not found` }),
+    ApiNotFoundResponse({ description: `${targetName} not found` }),
     ApiBadRequestResponse({ description: 'Invalid parameter' }),
     ApiOperation({
-      summary: `Delete ${getModelName(model).toLowerCase()} by ${attribute}`,
+      summary: `Delete ${targetName.toLowerCase()} by ${attribute}`,
     }),
   )
 }

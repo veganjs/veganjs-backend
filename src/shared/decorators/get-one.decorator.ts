@@ -9,23 +9,27 @@ import {
 import { getModelName } from '../lib/getModelName'
 
 interface ApiGetOneParams<Model> {
+  name?: string
   model: Model
   attribute?: string
 }
 
 export const ApiGetOne = <Model extends Type<unknown>>({
+  name,
   model,
   attribute = 'id',
 }: ApiGetOneParams<Model>) => {
+  const targetName = name ?? getModelName(model)
+
   return applyDecorators(
     ApiOkResponse({
       type: model,
-      description: `${getModelName(model)} has been fetched`,
+      description: `${targetName} has been fetched`,
     }),
-    ApiNotFoundResponse({ description: `${getModelName(model)} not found` }),
+    ApiNotFoundResponse({ description: `${targetName} not found` }),
     ApiBadRequestResponse({ description: 'Invalid parameter' }),
     ApiOperation({
-      summary: `Get ${getModelName(model).toLowerCase()} by ${attribute}`,
+      summary: `Get ${targetName.toLowerCase()} by ${attribute}`,
     }),
   )
 }

@@ -42,15 +42,15 @@ export class UserService {
 
   async updateUser(payload: UpdateUserDto, userId: string) {
     try {
-      const user = await this.getUserById(userId)
+      await this.getUserById(userId)
       await this.userRepository.update(
-        { id: user.id },
+        { id: userId },
         {
           ...(payload.username && { username: payload.username }),
           ...(payload.avatar && { avatar: payload.avatar }),
         },
       )
-      return await this.userRepository.findOne({ where: { id: user.id } })
+      return await this.getUserById(userId)
     } catch (error) {
       if (error.code === PostgresError.UniqueViolation) {
         throw new ConflictException(`User ${payload.username} already exists`)

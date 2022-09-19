@@ -5,6 +5,7 @@ import {
   OneToMany,
   ManyToOne,
   CreateDateColumn,
+  UpdateDateColumn,
   PrimaryGeneratedColumn,
 } from 'typeorm'
 
@@ -37,10 +38,15 @@ export class RecipeEntity extends BaseEntity {
     type: 'timestamptz',
     transformer: new ColumnDateTransformer(),
   })
-  createdAt?: DateISO
+  createdAt: DateISO
+
+  @UpdateDateColumn({
+    type: 'timestamptz',
+    transformer: new ColumnDateTransformer(),
+  })
+  updatedAt: DateISO
 
   @ManyToOne(() => CategoryEntity, (category) => category.recipes, {
-    eager: true,
     nullable: true,
     onDelete: 'SET NULL',
     onUpdate: 'CASCADE',
@@ -58,7 +64,6 @@ export class RecipeEntity extends BaseEntity {
   steps: StepEntity[]
 
   @ManyToOne(() => UserEntity, (user) => user.recipes, {
-    eager: true,
     nullable: true,
     onDelete: 'SET NULL',
     onUpdate: 'CASCADE',

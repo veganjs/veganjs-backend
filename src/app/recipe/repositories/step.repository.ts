@@ -1,4 +1,3 @@
-import { NotFoundException } from '@nestjs/common'
 import { Repository } from 'typeorm'
 
 import { CustomRepository } from '~/shared/lib/typeorm-ex'
@@ -8,12 +7,6 @@ import { StepEntity } from '../entities/step.entity'
 
 @CustomRepository(StepEntity)
 export class StepRepository extends Repository<StepEntity> {
-  private async getStepsByRecipeId(recipeId: string) {
-    return await this.find({
-      where: { recipeId },
-    })
-  }
-
   private prepareStep(payload: CreateStepDto, recipeId: string, order: number) {
     const step = new StepEntity()
 
@@ -29,13 +22,5 @@ export class StepRepository extends Repository<StepEntity> {
       this.prepareStep(step, recipeId, order),
     )
     return await this.save(steps)
-  }
-
-  async deleteSteps(recipeId: string) {
-    const steps = await this.getStepsByRecipeId(recipeId)
-    if (!steps.length) {
-      throw new NotFoundException('Steps not found')
-    }
-    await this.remove(steps)
   }
 }

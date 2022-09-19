@@ -84,7 +84,7 @@ export class AuthService {
   }
 
   async signUp(credentials: SignUpCredentialsDto) {
-    return this.userRepository.createUser(credentials)
+    return await this.userRepository.createUser(credentials)
   }
 
   async refreshToken(reply: FastifyReply, user: JwtUser) {

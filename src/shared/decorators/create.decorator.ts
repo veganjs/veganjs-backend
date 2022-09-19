@@ -9,22 +9,26 @@ import {
 import { getModelName } from '../lib/getModelName'
 
 interface ApiCreateParams<Model> {
+  name?: string
   model: Model
   conflict?: boolean
 }
 
 export const ApiCreate = <Model extends Type<unknown>>({
+  name,
   model,
   conflict = false,
 }: ApiCreateParams<Model>) => {
+  const targetName = name ?? getModelName(model)
+
   const defaultDecorators = [
     ApiCreatedResponse({
       type: model,
-      description: `${getModelName(model)} has been created`,
+      description: `${targetName} has been created`,
     }),
     ApiBadRequestResponse({ description: 'Invalid body' }),
     ApiOperation({
-      summary: `Create new ${getModelName(model).toLowerCase()}`,
+      summary: `Create new ${targetName.toLowerCase()}`,
     }),
   ]
 
@@ -32,7 +36,7 @@ export const ApiCreate = <Model extends Type<unknown>>({
     return applyDecorators(
       ...defaultDecorators,
       ApiConflictResponse({
-        description: `${getModelName(model)} already exists`,
+        description: `${targetName} already exists`,
       }),
     )
   }

@@ -10,25 +10,29 @@ import {
 import { getModelName } from '../lib/getModelName'
 
 interface ApiUpdateParams<Model> {
+  name?: string
   model: Model
   attribute?: string
   conflict?: boolean
 }
 
 export const ApiUpdate = <Model extends Type<unknown>>({
+  name,
   model,
   attribute = 'id',
   conflict = false,
 }: ApiUpdateParams<Model>) => {
+  const targetName = name ?? getModelName(model)
+
   const defaultDecorators = [
     ApiOkResponse({
       type: model,
-      description: `${getModelName(model)} has been updated`,
+      description: `${targetName} has been updated`,
     }),
-    ApiNotFoundResponse({ description: `${getModelName(model)} not found` }),
+    ApiNotFoundResponse({ description: `${targetName} not found` }),
     ApiBadRequestResponse({ description: 'Invalid body' }),
     ApiOperation({
-      summary: `Update ${getModelName(model).toLowerCase()} by ${attribute}`,
+      summary: `Update ${targetName.toLowerCase()} by ${attribute}`,
     }),
   ]
 
@@ -36,7 +40,7 @@ export const ApiUpdate = <Model extends Type<unknown>>({
     return applyDecorators(
       ...defaultDecorators,
       ApiConflictResponse({
-        description: `${getModelName(model)} already exists`,
+        description: `${targetName} already exists`,
       }),
     )
   }

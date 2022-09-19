@@ -56,10 +56,22 @@ export class RecipeService {
   }
 
   async getRecipeById(id: string) {
-    return await this.recipeRepository.findOne({
+    const recipe = await this.recipeRepository.findOne({
       where: { id },
-      relations: ['steps', 'ingredients', 'ingredients.ingredient'],
+      relations: [
+        'steps',
+        'author',
+        'category',
+        'ingredients',
+        'ingredients.ingredient',
+      ],
     })
+
+    if (!recipe) {
+      throw new NotFoundException('Recipe not found')
+    }
+
+    return recipe
   }
 
   async createRecipe(payload: CreateRecipeDto, userId: string) {

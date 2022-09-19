@@ -1,6 +1,8 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger'
 import { IsNotEmpty, IsString, IsISO8601, IsOptional } from 'class-validator'
 
+import { DateISO } from '~/shared/types'
+
 export class UserDto {
   @IsNotEmpty()
   @IsString()
@@ -16,5 +18,5 @@ export class UserDto {
   @IsNotEmpty()
   @IsISO8601()
   @ApiProperty({ description: 'User account creation date' })
-  createdAt: string
+  createdAt: DateISO
 }

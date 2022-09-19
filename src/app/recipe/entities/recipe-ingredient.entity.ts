@@ -3,7 +3,6 @@ import {
   Entity,
   ManyToOne,
   BaseEntity,
-  JoinColumn,
   PrimaryGeneratedColumn,
 } from 'typeorm'
 import { Exclude } from 'class-transformer'
@@ -43,6 +42,5 @@ export class RecipeIngredientEntity extends BaseEntity {
     onDelete: 'CASCADE',
     onUpdate: 'CASCADE',
   })
-  @JoinColumn([{ name: 'ingredientId', referencedColumnName: 'id' }])
   ingredient: IngredientEntity
 }

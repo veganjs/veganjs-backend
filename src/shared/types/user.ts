@@ -1,3 +1,4 @@
+import { DateISO } from './date'
 import { Role } from './roles'
 
 export type JwtUser = {
@@ -5,5 +6,5 @@ export type JwtUser = {
   username: string
   avatar: string
   roles: Role[]
-  createdAt: string
+  createdAt: DateISO
 }

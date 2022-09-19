@@ -43,9 +43,9 @@ export class CategoryService {
 
   async updateCategory(id: string, payload: UpdateCategoryDto) {
     try {
-      const category = await this.getCategoryById(id)
-      await this.categoryRepository.update({ id: category.id }, payload)
-      return await this.categoryRepository.findOne({ where: { id } })
+      await this.getCategoryById(id)
+      await this.categoryRepository.update({ id }, payload)
+      return await this.getCategoryById(id)
     } catch (error) {
       if (error.code === PostgresError.UniqueViolation) {
         throw new ConflictException(`Category ${payload.name} already exists`)

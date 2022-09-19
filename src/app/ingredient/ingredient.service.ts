@@ -74,11 +74,9 @@ export class IngredientService {
 
   async updateIngredient(id: string, payload: UpdateIngredientDto) {
     try {
-      const ingredient = await this.getIngredientById(id)
-      await this.ingredientRepository.update({ id: ingredient.id }, payload)
-      return await this.ingredientRepository.findOne({
-        where: { id: ingredient.id },
-      })
+      await this.getIngredientById(id)
+      await this.ingredientRepository.update({ id }, payload)
+      return await this.getIngredientById(id)
     } catch (error) {
       if (error.code === PostgresError.UniqueViolation) {
         throw new ConflictException(`Ingredient ${payload.name} already exists`)

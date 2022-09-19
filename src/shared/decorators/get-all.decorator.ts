@@ -5,23 +5,27 @@ import { getModelName } from '../lib/getModelName'
 import { ApiPaginatedResponse } from './paginated.decorator'
 
 interface ApiGetManyParams<Model> {
+  name?: string
   model: Model
   search?: boolean
   paginated?: boolean
 }
 
 export const ApiGetMany = <Model extends Type<unknown>>({
+  name,
   model,
   search = false,
   paginated = false,
 }: ApiGetManyParams<Model>) => {
+  const targetName = name ?? getModelName(model)
+
   const defaultDecorators = [
     ApiOkResponse({
       type: [model],
-      description: `${getModelName(model)} list has been fetched`,
+      description: `${targetName} list has been fetched`,
     }),
     ApiOperation({
-      summary: `Get many ${getModelName(model).toLowerCase()} items`,
+      summary: `Get many ${targetName.toLowerCase()} items`,
     }),
   ]
 
@@ -31,7 +35,7 @@ export const ApiGetMany = <Model extends Type<unknown>>({
     decorators.push(
       ApiPaginatedResponse({
         model,
-        description: `${getModelName(model)} list has been fetched`,
+        description: `${targetName} list has been fetched`,
       }),
     )
   }

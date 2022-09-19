@@ -55,7 +55,7 @@ export class UserEntity extends BaseEntity {
     type: 'timestamptz',
     transformer: new ColumnDateTransformer(),
   })
-  createdAt?: DateISO
+  createdAt: DateISO
 
   @OneToMany(() => RecipeEntity, (recipe) => recipe.author)
   recipes: RecipeEntity[]
