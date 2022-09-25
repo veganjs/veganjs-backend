@@ -1,7 +1,7 @@
 import { applyDecorators, Type } from '@nestjs/common'
 import { ApiExtraModels, ApiOkResponse, getSchemaPath } from '@nestjs/swagger'
 
-import { Paginated } from '../types'
+import { Paginated } from './paginated'
 
 interface PaginatedResponseParams<Model> {
   model: Model

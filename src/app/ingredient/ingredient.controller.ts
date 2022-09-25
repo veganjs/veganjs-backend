@@ -17,8 +17,9 @@ import {
   ApiGetMany,
   ApiGetOne,
   ApiUpdate,
-} from '~/shared/decorators'
-import { PaginationOptions, Role } from '~/shared/types'
+} from '~/shared/lib/crud-decorators'
+import { PaginationOptions } from '~/shared/lib/pagination'
+import { Role } from '~/shared/types'
 
 import { JwtAuthRequired } from '../auth/decorators/jwt-auth.decorator'
 import { IngredientDto } from './dto/ingredient.dto'

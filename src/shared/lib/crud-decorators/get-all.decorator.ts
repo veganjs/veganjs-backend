@@ -1,8 +1,8 @@
 import { applyDecorators, Type } from '@nestjs/common'
 import { ApiQuery, ApiOkResponse, ApiOperation } from '@nestjs/swagger'
 
-import { getModelName } from '../lib/getModelName'
-import { ApiPaginatedResponse } from './paginated.decorator'
+import { ApiPaginatedResponse } from '../pagination'
+import { getModelName } from './model-name'
 
 interface ApiGetManyParams<Model> {
   name?: string

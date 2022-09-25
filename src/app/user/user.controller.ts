@@ -18,8 +18,9 @@ import {
 } from '@nestjs/swagger'
 import { FastifyRequest } from 'fastify'
 
-import { ApiFormData, ApiGetOne } from '~/shared/decorators'
 import { JwtUser } from '~/shared/types'
+import { ApiFormData } from '~/shared/decorators'
+import { ApiGetOne } from '~/shared/lib/crud-decorators'
 
 import { JwtAuthRequired } from '../auth/decorators/jwt-auth.decorator'
 import { UpdatePasswordDto } from '../auth/dto/update-password.dto'

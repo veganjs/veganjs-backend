@@ -8,7 +8,7 @@ import {
 import { FastifyReply } from 'fastify'
 
 import { JwtUser } from '~/shared/types'
-import { ApiCreate } from '~/shared/decorators'
+import { ApiCreate } from '~/shared/lib/crud-decorators'
 
 import { UserDto } from '../user/dto/user.dto'
 import { GetUser } from '../user/decorators/user.decorator'

@@ -1,38 +1,34 @@
 import { applyDecorators, Type } from '@nestjs/common'
 import {
-  ApiOkResponse,
   ApiOperation,
+  ApiCreatedResponse,
   ApiConflictResponse,
-  ApiNotFoundResponse,
   ApiBadRequestResponse,
 } from '@nestjs/swagger'
 
-import { getModelName } from '../lib/getModelName'
+import { getModelName } from './model-name'
 
-interface ApiUpdateParams<Model> {
+interface ApiCreateParams<Model> {
   name?: string
   model: Model
-  attribute?: string
   conflict?: boolean
 }
 
-export const ApiUpdate = <Model extends Type<unknown>>({
+export const ApiCreate = <Model extends Type<unknown>>({
   name,
   model,
-  attribute = 'id',
   conflict = false,
-}: ApiUpdateParams<Model>) => {
+}: ApiCreateParams<Model>) => {
   const targetName = name ?? getModelName(model)
 
   const defaultDecorators = [
-    ApiOkResponse({
+    ApiCreatedResponse({
       type: model,
-      description: `${targetName} has been updated`,
+      description: `${targetName} has been created`,
     }),
-    ApiNotFoundResponse({ description: `${targetName} not found` }),
     ApiBadRequestResponse({ description: 'Invalid body' }),
     ApiOperation({
-      summary: `Update ${targetName.toLowerCase()} by ${attribute}`,
+      summary: `Create new ${targetName.toLowerCase()}`,
     }),
   ]
 

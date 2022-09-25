@@ -6,7 +6,7 @@ import {
   ApiOperation,
 } from '@nestjs/swagger'
 
-import { getModelName } from '../lib/getModelName'
+import { getModelName } from './model-name'
 
 interface ApiGetOneParams<Model> {
   name?: string

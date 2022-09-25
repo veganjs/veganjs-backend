@@ -16,7 +16,7 @@ import {
   ApiCreate,
   ApiUpdate,
   ApiDelete,
-} from '~/shared/decorators'
+} from '~/shared/lib/crud-decorators'
 import { Role } from '~/shared/types'
 
 import { JwtAuthRequired } from '../auth/decorators/jwt-auth.decorator'

@@ -15,8 +15,9 @@ import {
   ApiDelete,
   ApiGetMany,
   ApiGetOne,
-} from '~/shared/decorators'
-import { JwtUser, PaginationOptions } from '~/shared/types'
+} from '~/shared/lib/crud-decorators'
+import { PaginationOptions } from '~/shared/lib/pagination'
+import { JwtUser } from '~/shared/types'
 
 import { JwtAuthRequired } from '../auth/decorators/jwt-auth.decorator'
 import { GetUser } from '../user/decorators/user.decorator'
