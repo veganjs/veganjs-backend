@@ -1,4 +1,4 @@
-import { DateISO } from './date'
+import { DateISO } from './lib'
 import { Role } from './roles'
 
 export type JwtUser = {

@@ -7,6 +7,7 @@ import {
   PaginationMeta,
   PaginationOptions,
 } from '~/shared/lib/pagination'
+import { applySearchFilter } from '~/shared/lib/filters'
 
 import { IngredientService } from '../ingredient/ingredient.service'
 import { CategoryService } from '../category/category.service'
@@ -36,21 +37,20 @@ export class RecipeService {
   async getAllRecipes(query: string, options: PaginationOptions) {
     const queryBuilder = this.recipeRepository.createQueryBuilder('recipe')
 
+    applySearchFilter(queryBuilder, {
+      query,
+      searchFields: ['title'],
+    })
+
     queryBuilder
-      .skip(options.skip)
-      .take(options.limit)
       .leftJoinAndSelect('recipe.category', 'category')
       .leftJoinAndSelect('recipe.author', 'author')
       .leftJoinAndSelect('recipe.steps', 'steps')
       .leftJoinAndSelect('recipe.ingredients', 'ingredients')
       .leftJoinAndSelect('ingredients.ingredient', 'ingredient')
       .orderBy('recipe.title', options.sort)
-
-    if (query) {
-      queryBuilder.where('LOWER(recipe.title) LIKE LOWER(:query)', {
-        query: `%${query}%`,
-      })
-    }
+      .skip(options.skip)
+      .take(options.limit)
 
     const totalCount = await queryBuilder.getCount()
     const { entities } = await queryBuilder.getRawAndEntities()

@@ -11,6 +11,7 @@ import {
   PaginationMeta,
   PaginationOptions,
 } from '~/shared/lib/pagination'
+import { applySearchFilter } from '~/shared/lib/filters'
 import { PostgresError } from '~/shared/types'
 
 import { CreateIngredientDto } from './dto/create-ingredient.dto'
@@ -28,16 +29,15 @@ export class IngredientService {
     const queryBuilder =
       this.ingredientRepository.createQueryBuilder('ingredient')
 
+    applySearchFilter(queryBuilder, {
+      query,
+      searchFields: ['name'],
+    })
+
     queryBuilder
+      .orderBy('ingredient.name', options.sort)
       .skip(options.skip)
       .take(options.limit)
-      .orderBy('ingredient.name', options.sort)
-
-    if (query) {
-      queryBuilder.where('LOWER(ingredient.name) LIKE LOWER(:query)', {
-        query: `%${query}%`,
-      })
-    }
 
     const totalCount = await queryBuilder.getCount()
     const { entities } = await queryBuilder.getRawAndEntities()
