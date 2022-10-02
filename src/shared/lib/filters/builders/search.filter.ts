@@ -1,6 +1,7 @@
 import { Brackets, SelectQueryBuilder } from 'typeorm'
 
-import { NonEmptyArray } from '../../types'
+import { NonEmptyArray } from '../../../types'
+import { adaptFieldName, getUniqueParam } from '../lib'
 
 interface SearchFilterMeta {
   query: string
@@ -15,15 +16,16 @@ export function applySearchFilter<T>(
     return queryBuilder
   }
 
-  const searchFields = meta.searchFields.map(
-    (field) => `${queryBuilder.alias}.${field}`,
+  const searchFields = meta.searchFields.map((fieldName) =>
+    adaptFieldName(queryBuilder.alias, fieldName),
   )
 
   return queryBuilder.andWhere(
     new Brackets((qb) => {
       for (const field of searchFields) {
-        qb.orWhere(`LOWER(${field}) LIKE LOWER(:query)`, {
-          query: `%${meta.query}%`,
+        const param = getUniqueParam(field)
+        qb.orWhere(`LOWER (${field}) LIKE LOWER (:${param})`, {
+          [param]: `%${meta.query}%`,
         })
       }
     }),

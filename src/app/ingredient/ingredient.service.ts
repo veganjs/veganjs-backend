@@ -29,15 +29,15 @@ export class IngredientService {
     const queryBuilder =
       this.ingredientRepository.createQueryBuilder('ingredient')
 
-    applySearchFilter(queryBuilder, {
-      query,
-      searchFields: ['name'],
-    })
-
     queryBuilder
       .orderBy('ingredient.name', options.sort)
       .skip(options.skip)
       .take(options.limit)
+
+    applySearchFilter(queryBuilder, {
+      query,
+      searchFields: ['name'],
+    })
 
     const totalCount = await queryBuilder.getCount()
     const { entities } = await queryBuilder.getRawAndEntities()
