@@ -6,6 +6,8 @@ import {
   ApiUnsupportedMediaTypeResponse,
 } from '@nestjs/swagger'
 
+import { ErrorResponse } from '../error'
+
 const ApiFile =
   (fileName = 'file'): MethodDecorator =>
   (target: unknown, propertyKey: string, descriptor: PropertyDescriptor) => {
@@ -26,8 +28,12 @@ export const ApiFormData = () => {
   return applyDecorators(
     ApiConsumes('multipart/form-data'),
     ApiFile(),
-    ApiUnsupportedMediaTypeResponse({ description: 'Invalid mimetype' }),
+    ApiUnsupportedMediaTypeResponse({
+      type: ErrorResponse,
+      description: 'Invalid mimetype',
+    }),
     ApiBadRequestResponse({
+      type: ErrorResponse,
       description: 'Invalid content-type or no file provided',
     }),
   )

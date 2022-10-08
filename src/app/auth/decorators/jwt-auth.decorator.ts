@@ -5,6 +5,7 @@ import {
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger'
 
+import { ErrorResponse } from '~/shared/error'
 import { Role } from '~/shared/types'
 
 import { JwtAuthGuard } from '../guards/jwt-auth.guard'
@@ -14,7 +15,10 @@ import { RolesAllowed } from './roles.decorator'
 export function JwtAuthRequired(...roles: Role[]) {
   const defaultDecorators = [
     ApiCookieAuth(),
-    ApiUnauthorizedResponse({ description: 'Unauthorized' }),
+    ApiUnauthorizedResponse({
+      type: ErrorResponse,
+      description: 'Unauthorized',
+    }),
   ]
 
   if (roles?.length > 0) {
@@ -22,7 +26,10 @@ export function JwtAuthRequired(...roles: Role[]) {
       ...defaultDecorators,
       RolesAllowed(...roles),
       UseGuards(JwtAuthGuard, RolesGuard),
-      ApiForbiddenResponse({ description: 'Access denied' }),
+      ApiForbiddenResponse({
+        type: ErrorResponse,
+        description: 'Access denied',
+      }),
     )
   }
 

@@ -17,6 +17,9 @@ export class UserDto {
 
   @IsNotEmpty()
   @IsISO8601()
-  @ApiProperty({ description: 'User account creation date' })
+  @ApiProperty({
+    description: 'User account creation date',
+    format: 'date-time',
+  })
   createdAt: DateISO
 }

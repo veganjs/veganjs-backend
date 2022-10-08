@@ -2,12 +2,13 @@ import { Get, Post, Body, Controller, Res } from '@nestjs/common'
 import {
   ApiTags,
   ApiOperation,
-  ApiOkResponse,
+  ApiNoContentResponse,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger'
 import { FastifyReply } from 'fastify'
 
 import { JwtUser } from '~/shared/types'
+import { ErrorResponse } from '~/shared/error'
 import { ApiCreate } from '~/shared/lib/crud-decorators'
 
 import { UserDto } from '../user/dto/user.dto'
@@ -24,8 +25,11 @@ export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Post('login')
-  @ApiOkResponse({ description: 'Successfully logged in' })
-  @ApiUnauthorizedResponse({ description: 'Invalid credentials' })
+  @ApiNoContentResponse({ description: 'Successfully logged in' })
+  @ApiUnauthorizedResponse({
+    type: ErrorResponse,
+    description: 'Invalid credentials',
+  })
   @ApiOperation({ summary: 'Sign in' })
   login(@Body() credentials: LoginCredentialsDto, @Res() reply: FastifyReply) {
     return this.authService.signIn(reply, credentials)
@@ -39,7 +43,7 @@ export class AuthController {
 
   @Get('refresh')
   @JwtAuthRefreshRequired()
-  @ApiOkResponse({ description: 'Access token has been refreshed' })
+  @ApiNoContentResponse({ description: 'Access token has been refreshed' })
   @ApiOperation({ summary: 'Refresh access token' })
   refresh(@GetUser() user: JwtUser, @Res() reply: FastifyReply) {
     return this.authService.refreshToken(reply, user)
@@ -47,7 +51,7 @@ export class AuthController {
 
   @Get('logout')
   @JwtAuthRequired()
-  @ApiOkResponse({ description: 'Successfully logged out' })
+  @ApiNoContentResponse({ description: 'Successfully logged out' })
   @ApiOperation({ summary: 'Log out' })
   logout(@GetUser() user: JwtUser, @Res() reply: FastifyReply) {
     return this.authService.logout(reply, user)

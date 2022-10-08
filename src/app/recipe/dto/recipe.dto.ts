@@ -53,11 +53,11 @@ export class RecipeDto extends RecipeCommonDto {
 
   @IsNotEmpty()
   @IsISO8601()
-  @ApiProperty({ description: 'Recipe creation date' })
+  @ApiProperty({ description: 'Recipe creation date', format: 'date-time' })
   createdAt: DateISO
 
   @IsNotEmpty()
   @IsISO8601()
-  @ApiProperty({ description: 'Recipe updation date' })
+  @ApiProperty({ description: 'Recipe updation date', format: 'date-time' })
   updatedAt: DateISO
 }

@@ -17,6 +17,7 @@ import {
   ApiGetOne,
 } from '~/shared/lib/crud-decorators'
 import { PaginationOptions } from '~/shared/lib/pagination'
+import { ErrorResponse } from '~/shared/error'
 import { JwtUser } from '~/shared/types'
 
 import { JwtAuthRequired } from '../auth/decorators/jwt-auth.decorator'
@@ -55,7 +56,10 @@ export class RecipeController {
   @Post()
   @JwtAuthRequired()
   @ApiCreate({ model: RecipeDto })
-  @ApiNotFoundResponse({ description: 'Ingredients not found' })
+  @ApiNotFoundResponse({
+    type: ErrorResponse,
+    description: 'Ingredients not found',
+  })
   createRecipe(@GetUser() user: JwtUser, @Body() payload: CreateRecipeDto) {
     return this.recipeService.createRecipe(payload, user.id)
   }

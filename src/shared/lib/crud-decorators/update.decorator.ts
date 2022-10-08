@@ -7,6 +7,7 @@ import {
   ApiBadRequestResponse,
 } from '@nestjs/swagger'
 
+import { ErrorResponse } from '../../error'
 import { getModelName } from './lib'
 
 interface ApiUpdateParams<Model> {
@@ -29,8 +30,11 @@ export const ApiUpdate = <Model extends Type<unknown>>({
       type: model,
       description: `${targetName} has been updated`,
     }),
-    ApiNotFoundResponse({ description: `${targetName} not found` }),
-    ApiBadRequestResponse({ description: 'Invalid body' }),
+    ApiNotFoundResponse({
+      type: ErrorResponse,
+      description: `${targetName} not found`,
+    }),
+    ApiBadRequestResponse({ type: ErrorResponse, description: 'Invalid body' }),
     ApiOperation({
       summary: `Update ${targetName.toLowerCase()} by ${attribute}`,
     }),
@@ -40,6 +44,7 @@ export const ApiUpdate = <Model extends Type<unknown>>({
     return applyDecorators(
       ...defaultDecorators,
       ApiConflictResponse({
+        type: ErrorResponse,
         description: `${targetName} already exists`,
       }),
     )

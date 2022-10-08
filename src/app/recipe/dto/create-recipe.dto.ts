@@ -14,7 +14,7 @@ import { RecipeCommonDto } from './recipe-common.dto'
 
 export class CreateRecipeDto extends RecipeCommonDto {
   @IsUUID()
-  @ApiProperty({ description: 'Category id' })
+  @ApiProperty({ description: 'Category id', format: 'uuid' })
   categoryId: string
 
   @IsArray()

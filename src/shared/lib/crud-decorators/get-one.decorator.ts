@@ -6,6 +6,7 @@ import {
   ApiOperation,
 } from '@nestjs/swagger'
 
+import { ErrorResponse } from '../../error'
 import { getModelName } from './lib'
 
 interface ApiGetOneParams<Model> {
@@ -26,8 +27,14 @@ export const ApiGetOne = <Model extends Type<unknown>>({
       type: model,
       description: `${targetName} has been fetched`,
     }),
-    ApiNotFoundResponse({ description: `${targetName} not found` }),
-    ApiBadRequestResponse({ description: 'Invalid parameter' }),
+    ApiNotFoundResponse({
+      type: ErrorResponse,
+      description: `${targetName} not found`,
+    }),
+    ApiBadRequestResponse({
+      type: ErrorResponse,
+      description: 'Invalid parameter',
+    }),
     ApiOperation({
       summary: `Get ${targetName.toLowerCase()} by ${attribute}`,
     }),

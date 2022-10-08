@@ -11,7 +11,7 @@ import {
   PaginationMeta,
   PaginationOptions,
 } from '~/shared/lib/pagination'
-import { PostgresError } from '~/shared/types'
+import { PostgresError } from '~/database'
 
 import { CreateIngredientDto } from './dto/create-ingredient.dto'
 import { UpdateIngredientDto } from './dto/update-ingredient.dto'

@@ -9,7 +9,7 @@ import { pipeline } from 'stream'
 import { promisify } from 'util'
 import * as fs from 'fs'
 
-import { Path } from '~/config/constants.config'
+import { Path } from '~/config'
 
 import { UploadFileOptions } from './file.types'
 

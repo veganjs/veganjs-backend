@@ -2,7 +2,7 @@ import { ConflictException } from '@nestjs/common'
 import { Repository } from 'typeorm'
 import * as bcrypt from 'bcryptjs'
 
-import { PostgresError } from '~/shared/types'
+import { PostgresError } from '~/database'
 import { CustomRepository } from '~/shared/lib/typeorm-ex'
 
 import { LoginCredentialsDto } from '../../auth/dto/login.dto'

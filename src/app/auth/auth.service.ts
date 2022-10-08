@@ -80,7 +80,7 @@ export class AuthService {
 
     reply
       .header('Set-Cookie', [accessTokenCookie, refreshTokenCookie])
-      .code(HttpStatus.OK)
+      .code(HttpStatus.NO_CONTENT)
   }
 
   async signUp(credentials: SignUpCredentialsDto) {
@@ -90,12 +90,12 @@ export class AuthService {
   async refreshToken(reply: FastifyReply, user: JwtUser) {
     const payload = this.getJwtPayload(user)
     const accessTokenCookie = this.getJwtAccessTokenCookie(payload)
-    reply.header('Set-Cookie', accessTokenCookie)
+    reply.header('Set-Cookie', accessTokenCookie).code(HttpStatus.NO_CONTENT)
   }
 
   async logout(reply: FastifyReply, user: JwtUser) {
     const logoutCookie = this.getCookieForLogout()
     await this.userRepository.resetRefreshToken(user.id)
-    reply.header('Set-Cookie', logoutCookie)
+    reply.header('Set-Cookie', logoutCookie).code(HttpStatus.NO_CONTENT)
   }
 }

@@ -14,11 +14,13 @@ import {
   ApiTags,
   ApiOperation,
   ApiOkResponse,
+  ApiNoContentResponse,
   ApiBadRequestResponse,
 } from '@nestjs/swagger'
 import { FastifyRequest } from 'fastify'
 
 import { JwtUser } from '~/shared/types'
+import { ErrorResponse } from '~/shared/error'
 import { ApiFormData } from '~/shared/decorators'
 import { ApiGetOne } from '~/shared/lib/crud-decorators'
 
@@ -52,29 +54,35 @@ export class UserController {
   }
 
   @Patch('profile')
-  @HttpCode(HttpStatus.OK)
   @JwtAuthRequired()
-  @ApiBadRequestResponse({ description: 'Invalid body' })
-  @ApiOkResponse({ description: 'User profile has been updated' })
+  @ApiBadRequestResponse({ type: ErrorResponse, description: 'Invalid body' })
+  @ApiOkResponse({
+    type: UserDto,
+    description: 'User profile has been updated',
+  })
   @ApiOperation({ summary: 'Update user profile' })
   updateProfile(@GetUser() user: JwtUser, @Body() payload: UpdateProfileDto) {
     return this.userService.updateUser(payload, user.id)
   }
 
   @Put('change-password')
+  @HttpCode(HttpStatus.NO_CONTENT)
   @JwtAuthRequired()
-  @ApiBadRequestResponse({ description: 'Invalid body or password' })
-  @ApiOkResponse({ description: 'User password has been updated' })
+  @ApiBadRequestResponse({
+    type: ErrorResponse,
+    description: 'Invalid body or password',
+  })
+  @ApiNoContentResponse({ description: 'User password has been updated' })
   @ApiOperation({ summary: 'Update user password' })
   updatePassword(@GetUser() user: JwtUser, @Body() payload: UpdatePasswordDto) {
     return this.userService.updatePassword(payload, user.id)
   }
 
   @Post('avatar')
-  @HttpCode(HttpStatus.OK)
+  @HttpCode(HttpStatus.NO_CONTENT)
   @JwtAuthRequired()
   @ApiFormData()
-  @ApiOkResponse({ description: 'User avatar has been uploaded' })
+  @ApiNoContentResponse({ description: 'User avatar has been uploaded' })
   @ApiOperation({ summary: 'Upload user avatar' })
   uploadAvatar(@GetUser() user: JwtUser, @Req() req: FastifyRequest) {
     return this.userService.uploadAvatar(req, user.id)

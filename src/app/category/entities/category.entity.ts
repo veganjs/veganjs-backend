@@ -7,7 +7,7 @@ import {
 } from 'typeorm'
 
 import { RecipeEntity } from '../../recipe/entities/recipe.entity'
-import { CategoryTopic } from '../category.types'
+import { CategoryTopic } from '../category.constants'
 
 @Entity()
 export class CategoryEntity extends BaseEntity {

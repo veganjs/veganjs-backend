@@ -8,8 +8,8 @@ import { FastifyRequest } from 'fastify'
 import { InjectRepository } from '@nestjs/typeorm'
 import * as bcrypt from 'bcryptjs'
 
-import { PostgresError } from '~/shared/types'
-import { Path } from '~/config/constants.config'
+import { Path } from '~/config'
+import { PostgresError } from '~/database'
 
 import { UpdatePasswordDto } from '../auth/dto/update-password.dto'
 import { FileService } from '../file/file.service'

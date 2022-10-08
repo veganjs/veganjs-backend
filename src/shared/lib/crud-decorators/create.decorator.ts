@@ -6,6 +6,7 @@ import {
   ApiBadRequestResponse,
 } from '@nestjs/swagger'
 
+import { ErrorResponse } from '../../error'
 import { getModelName } from './lib'
 
 interface ApiCreateParams<Model> {
@@ -26,7 +27,7 @@ export const ApiCreate = <Model extends Type<unknown>>({
       type: model,
       description: `${targetName} has been created`,
     }),
-    ApiBadRequestResponse({ description: 'Invalid body' }),
+    ApiBadRequestResponse({ type: ErrorResponse, description: 'Invalid body' }),
     ApiOperation({
       summary: `Create new ${targetName.toLowerCase()}`,
     }),
@@ -36,6 +37,7 @@ export const ApiCreate = <Model extends Type<unknown>>({
     return applyDecorators(
       ...defaultDecorators,
       ApiConflictResponse({
+        type: ErrorResponse,
         description: `${targetName} already exists`,
       }),
     )

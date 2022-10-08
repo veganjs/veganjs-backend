@@ -2,10 +2,11 @@ import { applyDecorators, Type } from '@nestjs/common'
 import {
   ApiBadRequestResponse,
   ApiNotFoundResponse,
-  ApiOkResponse,
+  ApiNoContentResponse,
   ApiOperation,
 } from '@nestjs/swagger'
 
+import { ErrorResponse } from '../../error'
 import { getModelName } from './lib'
 
 interface ApiDeleteParams<Model> {
@@ -22,11 +23,17 @@ export const ApiDelete = <Model extends Type<unknown>>({
   const targetName = name ?? getModelName(model)
 
   return applyDecorators(
-    ApiOkResponse({
+    ApiNoContentResponse({
       description: `${targetName} has been deleted`,
     }),
-    ApiNotFoundResponse({ description: `${targetName} not found` }),
-    ApiBadRequestResponse({ description: 'Invalid parameter' }),
+    ApiNotFoundResponse({
+      type: ErrorResponse,
+      description: `${targetName} not found`,
+    }),
+    ApiBadRequestResponse({
+      type: ErrorResponse,
+      description: 'Invalid parameter',
+    }),
     ApiOperation({
       summary: `Delete ${targetName.toLowerCase()} by ${attribute}`,
     }),
