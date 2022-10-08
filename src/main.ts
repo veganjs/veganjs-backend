@@ -7,9 +7,7 @@ import {
 } from '@nestjs/platform-fastify'
 
 import { AppModule } from '~/app/app.module'
-import { Path } from '~/config/constants.config'
-import { setupSwagger } from '~/config/swagger.config'
-import { loadPlugins } from '~/config/plugins.config'
+import { Path, loadPlugins, setupSwagger } from '~/config'
 import { TrimPipe } from '~/shared/pipes'
 
 async function bootstrap() {
