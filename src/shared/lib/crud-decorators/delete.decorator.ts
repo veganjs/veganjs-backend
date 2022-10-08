@@ -6,7 +6,7 @@ import {
   ApiOperation,
 } from '@nestjs/swagger'
 
-import { getModelName } from './model-name'
+import { getModelName } from './lib'
 
 interface ApiDeleteParams<Model> {
   name?: string

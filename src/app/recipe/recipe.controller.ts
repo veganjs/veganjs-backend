@@ -17,7 +17,6 @@ import {
   ApiGetOne,
 } from '~/shared/lib/crud-decorators'
 import { PaginationOptions } from '~/shared/lib/pagination'
-import { Filters } from '~/shared/lib/filters'
 import { JwtUser } from '~/shared/types'
 
 import { JwtAuthRequired } from '../auth/decorators/jwt-auth.decorator'
@@ -33,7 +32,7 @@ import { CreateRecipeDto } from './dto/create-recipe.dto'
 export class RecipeController {
   constructor(private readonly recipeService: RecipeService) {}
 
-  @Post('search')
+  @Get()
   @ApiGetMany({
     model: RecipeDto,
     paginated: true,
@@ -43,9 +42,8 @@ export class RecipeController {
   searchRecipes(
     @Query('search') search: string,
     @Query() options: PaginationOptions,
-    @Body() { filters }: Filters,
   ) {
-    return this.recipeService.searchRecipes(search, options, filters)
+    return this.recipeService.searchRecipes(search, options)
   }
 
   @Get(':id')

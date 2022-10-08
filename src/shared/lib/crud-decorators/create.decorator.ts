@@ -6,7 +6,7 @@ import {
   ApiBadRequestResponse,
 } from '@nestjs/swagger'
 
-import { getModelName } from './model-name'
+import { getModelName } from './lib'
 
 interface ApiCreateParams<Model> {
   name?: string

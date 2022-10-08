@@ -2,7 +2,7 @@ import { applyDecorators, HttpCode, HttpStatus, Type } from '@nestjs/common'
 import { ApiQuery, ApiOkResponse, ApiOperation } from '@nestjs/swagger'
 
 import { ApiPaginatedResponse } from '../pagination'
-import { getModelName } from './model-name'
+import { getModelName } from './lib'
 
 interface ApiGetManyParams<Model> {
   name?: string
