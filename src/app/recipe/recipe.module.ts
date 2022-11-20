@@ -4,6 +4,8 @@ import { TypeOrmModule } from '@nestjs/typeorm'
 import { TypeOrmExModule } from '~/shared/lib/typeorm-ex'
 
 import { AuthModule } from '../auth/auth.module'
+import { SearchModule } from '../search/search.module'
+import IngredientSearchService from '../ingredient/ingredient-search.service'
 import { UserRepository } from '../user/repositories/user.repository'
 import { IngredientService } from '../ingredient/ingredient.service'
 import { IngredientEntity } from '../ingredient/entities/ingredient.entity'
@@ -25,6 +27,7 @@ import { RecipeService } from './recipe.service'
       RecipeIngredientRepository,
     ]),
     TypeOrmModule.forFeature([RecipeEntity, CategoryEntity, IngredientEntity]),
+    SearchModule,
     AuthModule,
   ],
   controllers: [RecipeController],
@@ -34,6 +37,7 @@ import { RecipeService } from './recipe.service'
     CategoryService,
     UserService,
     FileService,
+    IngredientSearchService,
   ],
 })
 export class RecipeModule {}

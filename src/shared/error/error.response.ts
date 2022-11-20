@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger'
 import { IsEnum, IsISO8601, IsNumber, IsString } from 'class-validator'
+
 import { DateISO } from '../types'
 
 enum Method {

@@ -38,7 +38,10 @@ export class IngredientController {
     @Query('search') search: string,
     @Query() options: PaginationOptions,
   ) {
-    return this.ingredientService.getAllIngredients(search, options)
+    if (search) {
+      return this.ingredientService.searchIngredients(search, options)
+    }
+    return this.ingredientService.getAllIngredients(options)
   }
 
   @Get(':id')

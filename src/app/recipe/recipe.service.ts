@@ -2,11 +2,7 @@ import { Inject, Injectable, NotFoundException } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { Repository } from 'typeorm'
 
-import {
-  Paginated,
-  PaginationMeta,
-  PaginationOptions,
-} from '~/shared/lib/pagination'
+import { paginate, PaginationOptions } from '~/shared/lib/pagination'
 
 import { IngredientService } from '../ingredient/ingredient.service'
 import { CategoryService } from '../category/category.service'
@@ -52,11 +48,7 @@ export class RecipeService {
       })
     }
 
-    const totalCount = await queryBuilder.getCount()
-    const { entities } = await queryBuilder.getRawAndEntities()
-
-    const meta = new PaginationMeta({ totalCount, options })
-    return new Paginated(entities, meta)
+    return paginate(options, queryBuilder)
   }
 
   async getRecipeById(id: string) {

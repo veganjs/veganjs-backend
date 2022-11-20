@@ -1,1 +1,1 @@
-export * from './getModelName'
+export * from './getModelName.lib'

@@ -13,4 +13,7 @@ export const validationSchema = Joi.object({
   POSTGRES_HOST: Joi.string().required(),
   POSTGRES_PORT: Joi.number().required(),
   POSTGRES_DB: Joi.string().required(),
+  ELASTICSEARCH_NODE: Joi.string().required(),
+  ELASTICSEARCH_USERNAME: Joi.string().required(),
+  ELASTICSEARCH_PASSWORD: Joi.string().required(),
 })

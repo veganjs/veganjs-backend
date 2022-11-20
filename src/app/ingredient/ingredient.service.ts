@@ -6,25 +6,23 @@ import {
 import { InjectRepository } from '@nestjs/typeorm'
 import { In, Repository } from 'typeorm'
 
-import {
-  Paginated,
-  PaginationMeta,
-  PaginationOptions,
-} from '~/shared/lib/pagination'
 import { PostgresError } from '~/database'
+import { paginate, PaginationOptions } from '~/shared/lib/pagination'
 
 import { CreateIngredientDto } from './dto/create-ingredient.dto'
 import { UpdateIngredientDto } from './dto/update-ingredient.dto'
 import { IngredientEntity } from './entities/ingredient.entity'
+import IngredientSearchService from './ingredient-search.service'
 
 @Injectable()
 export class IngredientService {
   constructor(
     @InjectRepository(IngredientEntity)
     private readonly ingredientRepository: Repository<IngredientEntity>,
+    private readonly ingredientSearchService: IngredientSearchService,
   ) {}
 
-  async getAllIngredients(query: string, options: PaginationOptions) {
+  async getAllIngredients(options: PaginationOptions) {
     const queryBuilder =
       this.ingredientRepository.createQueryBuilder('ingredient')
 
@@ -33,17 +31,26 @@ export class IngredientService {
       .skip(options.skip)
       .take(options.limit)
 
-    if (query) {
-      queryBuilder.where('LOWER(ingredient.name) LIKE LOWER(:query)', {
-        query: `%${query}%`,
-      })
+    return paginate(options, queryBuilder)
+  }
+
+  async searchIngredients(query: string, options: PaginationOptions) {
+    const queryBuilder =
+      this.ingredientRepository.createQueryBuilder('ingredient')
+    const results = await this.ingredientSearchService.searchIngredients(query)
+    const ids = results.map(({ id }) => id)
+
+    if (!ids.length) {
+      return paginate(options)
     }
 
-    const totalCount = await queryBuilder.getCount()
-    const { entities } = await queryBuilder.getRawAndEntities()
+    queryBuilder
+      .where('id IN (:...ids)', { ids })
+      .orderBy('ingredient.name', options.sort)
+      .skip(options.skip)
+      .take(options.limit)
 
-    const meta = new PaginationMeta({ totalCount, options })
-    return new Paginated(entities, meta)
+    return paginate(options, queryBuilder)
   }
 
   async getIngredientsByIds(ids: string[]) {
@@ -64,7 +71,9 @@ export class IngredientService {
 
   async createIngredient(payload: CreateIngredientDto) {
     try {
-      return await this.ingredientRepository.save(payload)
+      const ingredient = await this.ingredientRepository.save(payload)
+      await this.ingredientSearchService.indexIngredient(ingredient)
+      return ingredient
     } catch (error) {
       if (error.code === PostgresError.UniqueViolation) {
         throw new ConflictException(`Ingredient ${payload.name} already exists`)
@@ -74,8 +83,9 @@ export class IngredientService {
 
   async updateIngredient(id: string, payload: UpdateIngredientDto) {
     try {
-      await this.getIngredientById(id)
+      const ingredient = await this.getIngredientById(id)
       await this.ingredientRepository.update({ id }, payload)
+      await this.ingredientSearchService.updateIndex(ingredient)
       return await this.getIngredientById(id)
     } catch (error) {
       if (error.code === PostgresError.UniqueViolation) {
@@ -86,8 +96,9 @@ export class IngredientService {
 
   async deleteIngredient(id: string) {
     const ingredient = await this.ingredientRepository.delete(id)
-    if (ingredient.affected === 0) {
+    if (!ingredient.affected) {
       throw new NotFoundException('Ingredient not found')
     }
+    await this.ingredientSearchService.removeIndex(id)
   }
 }
