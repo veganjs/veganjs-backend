@@ -16,7 +16,7 @@ export async function loadPlugins(app: NestFastifyApplication) {
 
   await app.register(fastifyCors, {
     credentials: true,
-    origin: configService.get<string>('CORS_ORIGIN'),
+    origin: [configService.get<string>('CORS_ORIGIN')],
   })
   await app.register(fastifyStatic, {
     root: join(process.cwd(), Path.Static),
