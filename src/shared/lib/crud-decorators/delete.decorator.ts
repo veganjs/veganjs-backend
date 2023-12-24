@@ -1,4 +1,4 @@
-import { applyDecorators, Type } from '@nestjs/common'
+import { applyDecorators, HttpStatus, HttpCode, Type } from '@nestjs/common'
 import {
   ApiBadRequestResponse,
   ApiNotFoundResponse,
@@ -23,6 +23,7 @@ export const ApiDelete = <Model extends Type<unknown>>({
   const targetName = name ?? getModelName(model)
 
   return applyDecorators(
+    HttpCode(HttpStatus.NO_CONTENT),
     ApiNoContentResponse({
       description: `${targetName} has been deleted`,
     }),

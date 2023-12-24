@@ -1,0 +1,82 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  User
+  Admin
+}
+
+enum CategoryTopic {
+  Breakfast
+  Lunch
+  Snack
+  Salad
+  Soup
+  Dessert
+  Bake
+  Smoothie
+}
+
+enum MeasureUnit {
+  Ml
+  L
+  G
+  Kg
+  Tsp
+  Tbsp
+  Cup
+  Piece
+  Pack
+}
+
+model Recipe {
+  id          String             @id @default(uuid())
+  name        String
+  description String
+  source      String?
+  servings    Int?
+  createdAt   DateTime           @default(now())
+  updatedAt   DateTime           @updatedAt
+  category    Category           @relation(fields: [categoryId], references: [id])
+  categoryId  String
+  ingredients RecipeIngredient[]
+  author      User               @relation(fields: [authorId], references: [id])
+  authorId    String
+}
+
+model Ingredient {
+  id      String             @id @default(uuid())
+  name    String             @unique
+  recipes RecipeIngredient[]
+}
+
+model RecipeIngredient {
+  id           String      @id @default(uuid())
+  quantity     Int
+  unit         MeasureUnit
+  recipe       Recipe      @relation(fields: [recipeId], references: [id])
+  recipeId     String
+  ingredient   Ingredient  @relation(fields: [ingredientId], references: [id])
+  ingredientId String
+}
+
+model Category {
+  id      String        @id @default(uuid())
+  name    CategoryTopic @unique
+  recipes Recipe[]
+}
+
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  avatar    String?
+  roles     Role     @default(User)
+  createdAt DateTime @default(now())
+  recipes   Recipe[]
+}

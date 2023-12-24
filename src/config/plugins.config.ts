@@ -1,36 +1,3 @@
-import { NestFastifyApplication } from '@nestjs/platform-fastify'
-import { ConfigService } from '@nestjs/config'
-import fastifyCors from '@fastify/cors'
-import fastifyCookie from '@fastify/cookie'
-import fastifyStatic from '@fastify/static'
-import fastifyHelmet from '@fastify/helmet'
-import fastifyRateLimit from '@fastify/rate-limit'
-import fastifyCsrf from '@fastify/csrf-protection'
-import fastifyMultipart from '@fastify/multipart'
-import { join } from 'path'
+import { INestApplication } from '@nestjs/common'
 
-import { Path } from './constants.config'
-
-export async function loadPlugins(app: NestFastifyApplication) {
-  const configService = app.get(ConfigService)
-
-  await app.register(fastifyCors, {
-    credentials: true,
-    origin: [configService.get<string>('CORS_ORIGIN')],
-  })
-  await app.register(fastifyStatic, {
-    root: join(process.cwd(), Path.Static),
-    prefix: `/${Path.Static}/`,
-    cacheControl: true,
-  })
-  await app.register(fastifyMultipart)
-  await app.register(fastifyRateLimit, {
-    max: 20,
-    timeWindow: '1 minute',
-  })
-  await app.register(fastifyCookie, {
-    secret: configService.get<string>('COOKIE_SECRET'),
-  })
-  await app.register(fastifyCsrf)
-  await app.register(fastifyHelmet)
-}
+export async function loadPlugins(_app: INestApplication) {}

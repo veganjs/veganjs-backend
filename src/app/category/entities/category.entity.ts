@@ -1,22 +1,14 @@
-import {
-  Column,
-  Entity,
-  BaseEntity,
-  OneToMany,
-  PrimaryGeneratedColumn,
-} from 'typeorm'
+import { Category, CategoryTopic } from '@prisma/client'
+import { IsNotEmpty, IsUUID, IsEnum } from 'class-validator'
+import { ApiProperty } from '@nestjs/swagger'
 
-import { RecipeEntity } from '../../recipe/entities/recipe.entity'
-import { CategoryTopic } from '../category.constants'
-
-@Entity()
-export class CategoryEntity extends BaseEntity {
-  @PrimaryGeneratedColumn('uuid')
+export class CategoryEntity implements Category {
+  @IsUUID()
+  @ApiProperty({ description: 'Category id', format: 'uuid' })
   id: string
 
-  @Column({ type: 'enum', enum: CategoryTopic, unique: true })
+  @IsNotEmpty()
+  @IsEnum(CategoryTopic)
+  @ApiProperty({ description: 'Category name', enum: CategoryTopic })
   name: CategoryTopic
-
-  @OneToMany(() => RecipeEntity, (recipe) => recipe.category)
-  recipes: RecipeEntity[]
 }

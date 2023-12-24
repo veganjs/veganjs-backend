@@ -1,10 +1,9 @@
 import { DateISO } from './lib'
-import { Role } from './roles'
 
 export type JwtUser = {
   id: string
-  username: string
+  email: string
   avatar: string
-  roles: Role[]
+  // roles: Role[]
   createdAt: DateISO
 }

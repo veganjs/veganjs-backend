@@ -1,7 +1,6 @@
+import { CategoryTopic } from '@prisma/client'
 import { IsNotEmpty, IsEnum } from 'class-validator'
 import { ApiProperty } from '@nestjs/swagger'
-
-import { CategoryTopic } from '../category.constants'
 
 export class CreateCategoryDto {
   @IsNotEmpty()

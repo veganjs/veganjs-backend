@@ -1,18 +1,12 @@
 import { Module } from '@nestjs/common'
 import { ConfigModule } from '@nestjs/config'
-import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core'
+import { APP_INTERCEPTOR } from '@nestjs/core'
+import { PrismaModule } from 'nestjs-prisma'
 
+import { configuration, validationSchema } from '~/config'
 import { LoggingInterceptor, TransformInterceptor } from '~/shared/interceptors'
-import { HttpExceptionFilter } from '~/shared/filters'
 
-import { configuration, validationSchema } from '../config'
-import { DatabaseModule } from '../database/database.module'
 import { CategoryModule } from './category/category.module'
-import { IngredientModule } from './ingredient/ingredient.module'
-import { RecipeModule } from './recipe/recipe.module'
-import { UserModule } from './user/user.module'
-import { AuthModule } from './auth/auth.module'
-import { FileModule } from './file/file.module'
 
 @Module({
   imports: [
@@ -23,19 +17,10 @@ import { FileModule } from './file/file.module'
       load: [configuration],
       envFilePath: `${process.cwd()}/.env.${process.env.NODE_ENV}`,
     }),
-    DatabaseModule,
+    PrismaModule.forRoot({ isGlobal: true }),
     CategoryModule,
-    IngredientModule,
-    RecipeModule,
-    UserModule,
-    AuthModule,
-    FileModule,
   ],
   providers: [
-    {
-      provide: APP_FILTER,
-      useClass: HttpExceptionFilter,
-    },
     {
       provide: APP_INTERCEPTOR,
       useClass: LoggingInterceptor,

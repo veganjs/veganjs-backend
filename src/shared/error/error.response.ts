@@ -1,35 +1,14 @@
-import { ApiProperty } from '@nestjs/swagger'
-import { IsEnum, IsISO8601, IsNumber, IsString } from 'class-validator'
-import { DateISO } from '../types'
-
-enum Method {
-  Get = 'GET',
-  Post = 'POST',
-  Put = 'PUT',
-  Patch = 'PATCH',
-  Delete = 'DELETE',
-}
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger'
+import { IsNumber, IsString } from 'class-validator'
 
 export class ErrorResponse {
   @IsNumber()
   @ApiProperty({ description: 'Response status code', example: 400 })
   statusCode: number
 
-  @IsISO8601()
-  @ApiProperty({ description: 'Request timestamp', format: 'date-time' })
-  timestamp: DateISO
-
   @IsString()
-  @ApiProperty({ description: 'Request URL', example: '/api/auth/login' })
-  path: string
-
-  @IsEnum(Method)
-  @ApiProperty({
-    enum: Method,
-    example: Method.Post,
-    description: 'Request method',
-  })
-  method: Method
+  @ApiPropertyOptional({ description: 'Error name', example: 'Bad Request' })
+  error: string
 
   @IsString()
   @ApiProperty({

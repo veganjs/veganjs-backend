@@ -1,62 +1,32 @@
-import {
-  Injectable,
-  ConflictException,
-  NotFoundException,
-} from '@nestjs/common'
-import { InjectRepository } from '@nestjs/typeorm'
-import { Repository } from 'typeorm'
-
-import { PostgresError } from '~/database'
+import { Injectable } from '@nestjs/common'
+import { PrismaService } from 'nestjs-prisma'
 
 import { CreateCategoryDto } from './dto/create-category.dto'
 import { UpdateCategoryDto } from './dto/update-category.dto'
-import { CategoryEntity } from './entities/category.entity'
 
 @Injectable()
 export class CategoryService {
-  constructor(
-    @InjectRepository(CategoryEntity)
-    private readonly categoryRepository: Repository<CategoryEntity>,
-  ) {}
+  constructor(private readonly prisma: PrismaService) {}
 
   async getAllCategories() {
-    return await this.categoryRepository.find()
+    return await this.prisma.category.findMany()
   }
 
   async getCategoryById(id: string) {
-    const category = await this.categoryRepository.findOne({ where: { id } })
-    if (!category) {
-      throw new NotFoundException('Category not found')
-    }
-    return category
+    return await this.prisma.category.findUniqueOrThrow({
+      where: { id },
+    })
   }
 
   async createCategory(payload: CreateCategoryDto) {
-    try {
-      return await this.categoryRepository.save(payload)
-    } catch (error) {
-      if (error.code === PostgresError.UniqueViolation) {
-        throw new ConflictException(`Category ${payload.name} already exists`)
-      }
-    }
+    return await this.prisma.category.create({ data: payload })
   }
 
   async updateCategory(id: string, payload: UpdateCategoryDto) {
-    try {
-      await this.getCategoryById(id)
-      await this.categoryRepository.update({ id }, payload)
-      return await this.getCategoryById(id)
-    } catch (error) {
-      if (error.code === PostgresError.UniqueViolation) {
-        throw new ConflictException(`Category ${payload.name} already exists`)
-      }
-    }
+    return await this.prisma.category.update({ where: { id }, data: payload })
   }
 
   async deleteCategory(id: string) {
-    const category = await this.categoryRepository.delete(id)
-    if (category.affected === 0) {
-      throw new NotFoundException('Category not found')
-    }
+    return await this.prisma.category.delete({ where: { id } })
   }
 }
